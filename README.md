@@ -50,7 +50,7 @@ Read these before trusting Acrohat with something important.
 | macOS (Intel) | [Acrohat-macOS-Intel.dmg](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-macOS-Intel.dmg) |
 | Linux | [Acrohat-Linux.AppImage](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Linux.AppImage) · [.deb](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Linux.deb) |
 
-Or use it in the browser, nothing to install: **https://officialsasere.github.io/acrohat/app/**
+Or use it in the browser, nothing to install: open the website and choose **Open in browser** (`/app/`).
 
 Because signing certificates cost money, your OS will warn you the first time:
 
@@ -85,8 +85,9 @@ Text editing works on PDFium's page objects: group text runs into lines and para
 
 ## Hosting & releases (maintainers)
 
-- Push to `main` → CI runs, and **GitHub Pages** publishes the landing page at `/` and the web app at `/app/` (free `github.io` domain).
-- Actions → **Release** → **Run workflow** (or push a tag like `v0.1.0`) builds macOS (Apple silicon + Intel), Windows and Linux installers and publishes them under fixed names, so the website's Download button works.
+- **Website and web app: Netlify.** Connect the GitHub repo in Netlify (Add new site → Import from Git). `netlify.toml` already sets the build command (`npm run build`), publish folder (`dist`) and Node version; no other settings are needed. The landing page is served at `/` and the editor at `/app/`. Every push to `main` redeploys.
+- **Installers: GitHub Releases.** Actions → **Release** → **Run workflow** (or push a tag like `v0.1.0`) builds macOS (Apple silicon + Intel), Windows and Linux installers and publishes them under fixed names, so the website's Download button links straight to them.
+- CI (`.github/workflows/ci.yml`) runs the type check, lint, unit tests and browser tests on every push and pull request.
 - Package managers (Homebrew tap, winget, Flathub) are free; see [docs/PACKAGING.md](docs/PACKAGING.md).
 
 ## License

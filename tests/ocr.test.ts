@@ -1,6 +1,8 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import { createWorker } from 'tesseract.js'
 import { writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { PdfDocument } from '../src/engine/document'
 import { addOcrLayer } from '../src/engine/ocr'
 import { coverage } from '../src/engine/fonts'
@@ -36,7 +38,7 @@ describe('OCR', () => {
     const worker = await createWorker('eng', 1, {
       langPath: new URL('../node_modules/@tesseract.js-data/eng/4.0.0_best_int', import.meta.url).pathname,
       gzip: true,
-      cachePath: '/tmp/acrohat-tess-cache',
+      cachePath: join(tmpdir(), 'acrohat-tess-cache'),
     })
     // tesseract.js accepts raw encoded images; hand it a PNG made from the RGBA pixels.
     const { PNG } = await import('pngjs')

@@ -1,0 +1,37 @@
+# Netlify hosts the website (/) and the web app (/app/). Installers are served by GitHub Releases.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# `/app` and `/app/` both open the editor.
+[[redirects]]
+  from = "/app"
+  to = "/app/"
+  status = 301
+
+# Files whose names contain a content hash never change, so browsers may keep them forever.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Bundled fonts, OCR engine and language data: large, rarely change.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+[[headers]]
+  for = "/ocr/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

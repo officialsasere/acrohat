@@ -113,12 +113,8 @@
 <footer>MIT licensed · <a id="repo" href="#">Source on GitHub</a></footer>
 
 <script>
-  // Where the installers live. On <owner>.github.io/<repo>/ this is derived from the address.
-  const REPO = (() => {
-    const host = location.hostname, path = location.pathname.split('/').filter(Boolean)
-    if (host.endsWith('.github.io')) return { owner: host.split('.')[0], name: path[0] || host }
-    return { owner: 'officialsasere', name: 'acrohat' }
-  })()
+  // Where the installers live (GitHub Releases); the website itself is hosted on Netlify.
+  const REPO = { owner: 'officialsasere', name: 'acrohat' }
   const repoUrl = `https://github.com/${REPO.owner}/${REPO.name}`
   // "latest/download/<file>" always points at the newest release, so these links never go stale and
   // clicking one starts the download immediately.

@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Acrohat",
   "version": "0.1.0",
-  "identifier": "org.acrohat.app",
+  "identifier": "io.github.officialsasere.acrohat",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173/app/",

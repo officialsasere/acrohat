@@ -34,6 +34,14 @@
     table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
     td, th { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
     code { background: var(--card); padding: 2px 6px; border-radius: 5px; font-size: 14px; }
+    .dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 16px 0; }
+    .dl-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
+    .dl-card.you { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+    .dl-card h3 { margin: 0; font-size: 20px; }
+    .dl-card p { margin: 0; color: var(--muted); font-size: 14px; }
+    .dl-card .btn { text-align: center; }
+    .dl-card .alt { color: var(--muted); font-size: 14px; }
+    .soon .btn, .soon .alt { opacity: .55; }
     footer { text-align: center; color: var(--muted); font-size: 14px; padding-bottom: 40px; }
     footer a { color: inherit; }
   </style>
@@ -78,8 +86,19 @@
   </section>
 
   <h2 id="downloads">Download</h2>
-  <p id="releases-status">Looking up the latest version…</p>
-  <table id="releases" hidden><tbody></tbody></table>
+  <p id="releases-status" class="small">Free. No account. Pick your system:</p>
+  <div class="dl-grid">
+    <div class="dl-card" id="dl-win"><h3>Windows</h3><p>Windows 10 or 11</p>
+      <a class="btn primary" data-file="Acrohat-Windows-Setup.exe">Download for Windows</a>
+      <a class="alt" data-file="Acrohat-Windows.msi">.msi installer (IT deployment)</a></div>
+    <div class="dl-card" id="dl-mac"><h3>macOS</h3><p>macOS 11 or newer</p>
+      <a class="btn primary" data-file="Acrohat-macOS-AppleSilicon.dmg">Apple silicon (M1 and newer)</a>
+      <a class="btn" data-file="Acrohat-macOS-Intel.dmg">Intel Mac</a></div>
+    <div class="dl-card" id="dl-linux"><h3>Linux</h3><p>Any recent distribution</p>
+      <a class="btn primary" data-file="Acrohat-Linux.AppImage">Download .AppImage</a>
+      <a class="alt" data-file="Acrohat-Linux.deb">.deb for Debian / Ubuntu</a></div>
+  </div>
+  <p class="small">Don't want to install anything? <a href="app/">Use Acrohat in your browser</a>. Need an older version or the source? <a href="REPO_URL/releases">See all releases</a>.</p>
 
   <h2>Installing an unsigned app</h2>
   <p>Acrohat is a free project and the installers are not yet signed with paid developer certificates, so your OS will warn you the first time:</p>
@@ -90,52 +109,62 @@
   </table>
   <p>Prefer to verify? The <a href="REPO_URL">source is public</a> and the installers are built by public GitHub Actions runs.</p>
 
-  <h2>Honest comparison with Acrobat</h2>
-  <p>Acrohat covers the everyday and a lot of the professional toolkit. It is not a 1:1 clone: Acrobat is 30 years of work plus cloud services.</p>
-  <table>
-    <tr><th>Not available</th><td>Adobe Sign and other cloud services, PDF/X and full print Preflight, XFA forms, 3D/multimedia, <em>creating</em> PDFs from Word/Excel/PowerPoint files, Excel/PowerPoint export (Word export is text and headings only).</td></tr>
-    <tr><th>Partial</th><td>Text editing works within a paragraph (not across columns or pages). Signatures are certificate-based but trust is up to the recipient (self-signed certificates show as unverified). OCR is English only. PDF/A conversion and the accessibility tagger are automatic and have <strong>not been certified by the official validators</strong> (veraPDF, PAC); check important files with them.</td></tr>
-  </table>
-</main>
+  </main>
 <footer>MIT licensed · <a id="repo" href="#">Source on GitHub</a></footer>
 
 <script>
-  // The site lives at <owner>.github.io/<repo>/, so the repository can be derived without hard-coding it.
-  const host = location.hostname, path = location.pathname.split('/').filter(Boolean)
-  const owner = host.endsWith('.github.io') ? host.split('.')[0] : null
-  const repo = owner ? (path[0] || host) : null
-  const repoUrl = owner ? `https://github.com/${owner}/${repo}` : 'https://github.com'
+  // Where the installers live. On <owner>.github.io/<repo>/ this is derived from the address.
+  const REPO = (() => {
+    const host = location.hostname, path = location.pathname.split('/').filter(Boolean)
+    if (host.endsWith('.github.io')) return { owner: host.split('.')[0], name: path[0] || host }
+    return { owner: 'officialsasere', name: 'acrohat' }
+  })()
+  const repoUrl = `https://github.com/${REPO.owner}/${REPO.name}`
+  // "latest/download/<file>" always points at the newest release, so these links never go stale and
+  // clicking one starts the download immediately.
+  const direct = (file) => `${repoUrl}/releases/latest/download/${file}`
+
   document.getElementById('repo').href = repoUrl
-  document.querySelectorAll('a[href="REPO_URL"]').forEach(a => a.href = repoUrl)
+  document.querySelectorAll('a[href^="REPO_URL"]').forEach(a => a.href = a.getAttribute('href').replace('REPO_URL', repoUrl))
+  document.querySelectorAll('a[data-file]').forEach(a => { a.href = direct(a.dataset.file); a.setAttribute('download', '') })
 
-  const os = /Mac/i.test(navigator.platform) ? 'mac' : /Win/i.test(navigator.platform) ? 'win' : 'linux'
-  const pick = {
-    mac: a => /\.dmg$/i.test(a.name),
-    win: a => /\.(msi|exe)$/i.test(a.name),
-    linux: a => /\.(AppImage|deb|rpm)$/i.test(a.name),
+  // Highlight the visitor's system and make the mainBtn button download for it in one click.
+  const ua = navigator.userAgent, plat = navigator.platform || ''
+  const os = /Android|iPhone|iPad|iPod/i.test(ua) ? 'mobile' : /Mac/i.test(plat) ? 'mac' : /Win/i.test(plat) ? 'win' : /Linux|X11/i.test(plat + ua) ? 'linux' : 'other'
+  const mainBtn = document.getElementById('download')
+  const hint = document.getElementById('os-hint')
+  async function mac() {
+    // Chromium can tell us the chip; Safari/Firefox can't, and almost every Mac sold since 2020 is Apple silicon.
+    try { const h = await navigator.userAgentData?.getHighEntropyValues(['architecture']); if (h && h.architecture === 'x86') return 'Acrohat-macOS-Intel.dmg' } catch {}
+    return 'Acrohat-macOS-AppleSilicon.dmg'
   }
-  const label = a => /dmg$/i.test(a.name) ? (/aarch64|arm64/i.test(a.name) ? 'macOS (Apple silicon)' : 'macOS (Intel)')
-    : /msi$/i.test(a.name) ? 'Windows (.msi)' : /exe$/i.test(a.name) ? 'Windows (.exe)'
-    : /AppImage$/i.test(a.name) ? 'Linux (.AppImage)' : /deb$/i.test(a.name) ? 'Linux (.deb)' : /rpm$/i.test(a.name) ? 'Linux (.rpm)' : a.name
+  ;(async () => {
+    const choice = { win: ['Acrohat-Windows-Setup.exe', 'Windows', 'dl-win'], linux: ['Acrohat-Linux.AppImage', 'Linux', 'dl-linux'] }[os]
+    if (os === 'mac') {
+      const f = await mac()
+      mainBtn.href = direct(f); mainBtn.setAttribute('download', ''); mainBtn.textContent = 'Download for macOS'
+      hint.innerHTML = f.includes('Intel') ? 'Intel Mac detected' : 'Apple silicon. <a href="#downloads">Intel Mac?</a>'
+      document.getElementById('dl-mac').classList.add('you')
+    } else if (choice) {
+      mainBtn.href = direct(choice[0]); mainBtn.setAttribute('download', ''); mainBtn.textContent = 'Download for ' + choice[1]
+      hint.textContent = `Detected: ${choice[1]}. Other systems below.`
+      document.getElementById(choice[2]).classList.add('you')
+    } else {
+      mainBtn.href = '#downloads'; mainBtn.textContent = 'See downloads'
+      hint.textContent = os === 'mobile' ? 'On a phone? Use the browser version.' : 'Windows · macOS · Linux'
+    }
+  })()
 
-  if (owner) {
-    fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`).then(r => r.ok ? r.json() : Promise.reject()).then(rel => {
-      const assets = rel.assets.filter(a => /\.(dmg|msi|exe|AppImage|deb|rpm)$/i.test(a.name))
-      const tbody = document.querySelector('#releases tbody')
-      for (const a of assets) {
-        const tr = document.createElement('tr')
-        tr.innerHTML = `<td>${label(a)}</td><td><a href="${a.browser_download_url}">${a.name}</a></td><td>${(a.size / 1048576).toFixed(1)} MB</td>`
-        tbody.appendChild(tr)
-      }
-      document.getElementById('releases').hidden = !assets.length
-      document.getElementById('releases-status').textContent = assets.length ? `Version ${rel.tag_name}` : 'No installers yet. Use the browser version for now.'
-      const mine = assets.find(pick[os])
-      document.getElementById('os-hint').textContent = 'Detected: ' + ({mac:'macOS',win:'Windows',linux:'Linux'})[os] + ' · all downloads below'
-      if (mine) { const b = document.getElementById('download'); b.href = mine.browser_download_url; b.textContent = 'Download for ' + label(mine).split(' (')[0]; }
-    }).catch(() => { document.getElementById('releases-status').innerHTML = `See <a href="${repoUrl}/releases">all releases</a>.` })
-  } else {
-    document.getElementById('releases-status').innerHTML = `See <a href="${repoUrl}/releases">all releases</a>.`
-  }
+  // If no release has been published yet, say so politely instead of sending people to a 404.
+  fetch(`https://api.github.com/repos/${REPO.owner}/${REPO.name}/releases/latest`).then(r => r.ok ? r.json() : Promise.reject()).then(rel => {
+    document.getElementById('releases-status').textContent = `Latest version: ${rel.tag_name}. Free, no account.`
+  }).catch(() => {
+    document.querySelectorAll('.dl-card').forEach(c => c.classList.add('soon'))
+    document.querySelectorAll('a[data-file], #download').forEach(a => { a.href = 'app/'; a.removeAttribute('download') })
+    mainBtn.textContent = 'Open in browser'
+    hint.textContent = 'Installers are being prepared. The browser version works right now.'
+    document.getElementById('releases-status').innerHTML = 'Installers are being prepared. <a href="app/">Use Acrohat in your browser</a> in the meantime.'
+  })
 </script>
 </body>
 </html>

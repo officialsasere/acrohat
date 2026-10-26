@@ -27,7 +27,7 @@
 
 ## Honest limitations
 
-Read these before trusting Acrohat with something important. It is **not** a 1:1 Acrobat clone.
+Read these before trusting Acrohat with something important.
 
 - **Text editing is paragraph-based.** PDFs store positioned glyphs, not paragraphs, so Acrohat reconstructs paragraphs by layout analysis. Mixed styles inside an edited paragraph (e.g. one bold word) take the style of the first run once the edit touches that line. Text can't flow across columns or pages. Rotated and vertical text are untested.
 - **Digital signatures** are real (PKCS#7 detached), but trust is up to the recipient: a self-signed certificate shows as unverified in Acrobat. Signing produces a *copy*; re-saving a signed file in any editor (including this one) invalidates the signature. Validation checks that the signed content and signature are intact; Acrohat has no trusted-root store, so it cannot tell you the signer's identity is certified. Only one signature per file can be added, and it can't be added incrementally to an already-signed file.
@@ -41,7 +41,16 @@ Read these before trusting Acrohat with something important. It is **not** a 1:1
 
 ## Install
 
-Download the installer for your system from the **[Releases](../../releases)** page, or use it right away in your browser from the project website.
+**One click:** open the website and press **Download**, or use a direct link:
+
+| System | Download |
+|---|---|
+| Windows | [Acrohat-Windows-Setup.exe](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Windows-Setup.exe) · [.msi](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Windows.msi) |
+| macOS (Apple silicon) | [Acrohat-macOS-AppleSilicon.dmg](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-macOS-AppleSilicon.dmg) |
+| macOS (Intel) | [Acrohat-macOS-Intel.dmg](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-macOS-Intel.dmg) |
+| Linux | [Acrohat-Linux.AppImage](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Linux.AppImage) · [.deb](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Linux.deb) |
+
+Or use it in the browser, nothing to install: **https://officialsasere.github.io/acrohat/app/**
 
 Because signing certificates cost money, your OS will warn you the first time:
 
@@ -52,7 +61,7 @@ Because signing certificates cost money, your OS will warn you the first time:
 ## Build from source
 
 ```bash
-git clone <this repo> && cd acrohat
+git clone https://github.com/officialsasere/acrohat && cd acrohat
 npm install
 npm run dev            # web app
 npm run tauri dev      # desktop app (needs Rust + Tauri prerequisites)
@@ -77,7 +86,7 @@ Text editing works on PDFium's page objects: group text runs into lines and para
 ## Hosting & releases (maintainers)
 
 - Push to `main` → CI runs, and **GitHub Pages** publishes the landing page at `/` and the web app at `/app/` (free `github.io` domain).
-- Push a tag `v0.1.0` → **Release** workflow builds macOS (Apple silicon + Intel), Windows and Linux installers and attaches them to a draft GitHub release.
+- Actions → **Release** → **Run workflow** (or push a tag like `v0.1.0`) builds macOS (Apple silicon + Intel), Windows and Linux installers and publishes them under fixed names, so the website's Download button works.
 - Package managers (Homebrew tap, winget, Flathub) are free; see [docs/PACKAGING.md](docs/PACKAGING.md).
 
 ## License

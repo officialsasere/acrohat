@@ -3,11 +3,19 @@ import { expect, test, type Page } from '@playwright/test'
 const SITE = 'http://localhost:4173/'
 const REPO = 'https://github.com/officialsasere/acrohat'
 
-async function visit(page: Page, opts: { platform: string; release: boolean; ua?: string }) {
-  await page.addInitScript(({ platform, ua }) => {
+/**
+ * `arch` fakes what Chromium reports about the processor. Left undefined, the browser has no such API (like Safari
+ * and Firefox), so tests never depend on the machine they run on.
+ */
+async function visit(page: Page, opts: { platform: string; release: boolean; ua?: string; arch?: 'arm' | 'x86' }) {
+  await page.addInitScript(({ platform, ua, arch }) => {
     Object.defineProperty(navigator, 'platform', { get: () => platform })
     if (ua) Object.defineProperty(navigator, 'userAgent', { get: () => ua })
-  }, { platform: opts.platform, ua: opts.ua })
+    Object.defineProperty(navigator, 'userAgentData', {
+      configurable: true,
+      get: () => (arch ? { getHighEntropyValues: async () => ({ architecture: arch }) } : undefined),
+    })
+  }, { platform: opts.platform, ua: opts.ua, arch: opts.arch })
   await page.route('https://api.github.com/**', (route) =>
     opts.release ? route.fulfill({ json: { tag_name: 'v0.1.0' } }) : route.fulfill({ status: 404, json: { message: 'Not Found' } }),
   )
@@ -24,11 +32,26 @@ test('Windows visitor: one click downloads the Windows installer directly', asyn
   await expect(page.locator('#releases-status')).toContainText('v0.1.0')
 })
 
-test('Mac visitor gets the Apple silicon build, with the Intel one right there', async ({ page }) => {
+test('Mac visitor (browser that cannot tell the chip) gets Apple silicon, with the Intel one right there', async ({ page }) => {
   await visit(page, { platform: 'MacIntel', release: true })
   await expect(page.locator('#download')).toHaveText('Download for macOS')
   await expect(page.locator('#download')).toHaveAttribute('href', /Acrohat-macOS-AppleSilicon\.dmg$/)
   await expect(page.locator('a[data-file="Acrohat-macOS-Intel.dmg"]')).toHaveAttribute('href', `${REPO}/releases/latest/download/Acrohat-macOS-Intel.dmg`)
+})
+
+test('Mac visitor on Chrome/Edge gets the build for their actual chip', async ({ page }) => {
+  await visit(page, { platform: 'MacIntel', release: true, arch: 'x86' })
+  await expect(page.locator('#download')).toHaveAttribute('href', /Acrohat-macOS-Intel\.dmg$/)
+  await expect(page.locator('#os-hint')).toContainText('Intel')
+  await page.unrouteAll()
+  const arm = await page.context().newPage()
+  await arm.addInitScript(() => {
+    Object.defineProperty(navigator, 'platform', { get: () => 'MacIntel' })
+    Object.defineProperty(navigator, 'userAgentData', { configurable: true, get: () => ({ getHighEntropyValues: async () => ({ architecture: 'arm' }) }) })
+  })
+  await arm.route('https://api.github.com/**', (r) => r.fulfill({ json: { tag_name: 'v0.1.0' } }))
+  await arm.goto(SITE)
+  await expect(arm.locator('#download')).toHaveAttribute('href', /Acrohat-macOS-AppleSilicon\.dmg$/)
 })
 
 test('Linux visitor gets the AppImage; every installer has a visible link', async ({ page }) => {

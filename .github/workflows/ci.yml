@@ -10,13 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm }
-      - run: npm ci
-      - run: npm run typecheck
+        with: { node-version: 22, cache: yarn }
+      - run: yarn install --frozen-lockfile
+      - run: yarn typecheck
       - run: npx oxlint
-      - run: npm test
+      - run: yarn test
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - run: yarn test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
         with: { name: playwright-report, path: test-results }
@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm }
+        with: { node-version: 22, cache: yarn }
       - uses: dtolnay/rust-toolchain@stable
       - uses: swatinem/rust-cache@v2
         with: { workspaces: '${{ matrix.app }}' }
@@ -40,7 +40,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - run: npm ci
+      - run: yarn install --frozen-lockfile
       - name: Build the desktop app (no installer)
         working-directory: ${{ matrix.app }}
         run: npx tauri build --debug --no-bundle

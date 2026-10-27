@@ -9,11 +9,11 @@ By taking part you agree to our [Code of Conduct](CODE_OF_CONDUCT.md). Contribut
 1. **Fork** the repo on GitHub, then clone your fork.
 2. Set up (Node 22 or newer; nothing else is needed for the web app):
    ```bash
-   npm install
-   npm run dev          # opens the site at http://localhost:5173/ and the editor at /paper/app/
+   yarn install
+   yarn dev          # opens the site at http://localhost:5173/ and the editor at /paper/app/
    ```
 3. Make a change on a branch (`git switch -c fix-my-thing`).
-4. Check it: `npm run check` (typecheck + lint + unit tests, about 30 seconds).
+4. Check it: `yarn verify` (typecheck + lint + unit tests, about 30 seconds).
 5. Open a pull request. The template asks four short questions. A maintainer will review it; CI runs the same checks plus the browser tests.
 
 Not sure where to start? Look for issues labelled **good first issue** or **help wanted**, or see "Ideas" below.
@@ -22,12 +22,12 @@ Not sure where to start? Look for issues labelled **good first issue** or **help
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Dev server with hot reload |
-| `npm run check` | Typecheck, lint and unit tests (run before every PR) |
-| `npm test` | Unit tests for the PDF engine (Vitest, no browser) |
-| `npm run test:e2e` | Browser tests that drive the real UI (first time: `npx playwright install chromium`) |
-| `npm run build` | Production build of the whole site into `dist/` |
-| `npm run build:write` / `build:paper` | Build one app only (what the desktop installers bundle) |
+| `yarn dev` | Dev server with hot reload |
+| `yarn verify` | Typecheck, lint and unit tests (run before every PR) |
+| `yarn test` | Unit tests for the PDF engine (Vitest, no browser) |
+| `yarn test:e2e` | Browser tests that drive the real UI (first time: `npx playwright install chromium`) |
+| `yarn build` | Production build of the whole site into `dist/` |
+| `yarn build:write` / `yarn build:paper` | Build one app only (what the desktop installers bundle) |
 | `cd src-tauri-write && npx tauri dev` | Kwiiva Write desktop app (needs [Rust](https://rustup.rs) and the [Tauri prerequisites](https://tauri.app/start/prerequisites/)); use `src-tauri` for Kwiiva Paper |
 | `node scripts/make-logos.mjs` | Regenerates the logos in `public/` |
 

@@ -4,7 +4,7 @@
 
 ## How did you check it?
 
-- [ ] `npm run check` passes
+- [ ] `yarn verify` passes
 - [ ] I tried it in the app (and at phone width if it changes the UI)
 - [ ] I added or updated a test (engine features: one that saves, reopens and checks the file)
 

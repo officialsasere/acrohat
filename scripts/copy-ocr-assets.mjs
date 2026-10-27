@@ -19,7 +19,7 @@ const files = [
 for (const [from, to] of files) {
   const src = join(root, from)
   if (!existsSync(src)) {
-    console.error(`copy-ocr-assets: missing ${from} (run npm install)`)
+    console.error(`copy-ocr-assets: missing ${from} (run yarn install)`)
     process.exit(1)
   }
   copyFileSync(src, join(out, to))

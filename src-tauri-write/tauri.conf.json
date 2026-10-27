@@ -1,0 +1,68 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Kwiiva Write",
+  "version": "0.1.0",
+  "identifier": "io.github.officialsasere.kwiiva-write",
+  "build": {
+    "frontendDist": "../dist-write",
+    "devUrl": "http://localhost:5173/write/app/",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build:write"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Kwiiva Write",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 800,
+        "minHeight": 520,
+        "resizable": true,
+        "fullscreen": false,
+        "dragDropEnabled": false,
+        "url": "write/app/index.html"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost data: blob: https://kwiiva.netlify.app"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Write documents",
+    "longDescription": "Free, open-source document editor. Open and save DOCX. Everything stays on your computer.",
+    "copyright": "MIT License",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "docx"
+        ],
+        "name": "Document",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "role": "Editor"
+      },
+      {
+        "ext": [
+          "md"
+        ],
+        "name": "Markdown document",
+        "mimeType": "text/markdown",
+        "role": "Editor"
+      }
+    ],
+    "macOS": {
+      "minimumSystemVersion": "11.0",
+      "signingIdentity": "-"
+    }
+  }
+}

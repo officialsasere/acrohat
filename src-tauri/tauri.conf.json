@@ -1,19 +1,19 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Acrohat",
+  "productName": "Kwiiva Paper",
   "version": "0.1.0",
-  "identifier": "io.github.officialsasere.acrohat",
+  "identifier": "io.github.officialsasere.kwiiva-paper",
   "build": {
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:5173/app/",
+    "frontendDist": "../dist-paper",
+    "devUrl": "http://localhost:5173/paper/app/",
     "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build"
+    "beforeBuildCommand": "npm run build:paper"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "Acrohat",
+        "title": "Kwiiva Paper",
         "width": 1280,
         "height": 820,
         "minWidth": 800,
@@ -21,11 +21,11 @@
         "resizable": true,
         "fullscreen": false,
         "dragDropEnabled": false,
-        "url": "app/index.html"
+        "url": "paper/app/index.html"
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost data: blob:"
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost data: blob: https://kwiiva.netlify.app"
     }
   },
   "bundle": {

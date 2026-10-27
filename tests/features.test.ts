@@ -262,7 +262,7 @@ describe('extras: pages, stamps, flatten, links, outline', () => {
   })
 })
 
-describe('properties, sanitizing and Word export', () => {
+describe('properties, sanitizing and DOCX export', () => {
   it('edits properties and removes hidden data', async () => {
     const { readProps, writeProps, sanitize } = await import('../src/engine/meta')
     const original = await samplePdf()
@@ -301,7 +301,7 @@ describe('digital signatures', () => {
     cert.serialNumber = '01'
     cert.validity.notBefore = new Date(Date.now() - 86_400_000)
     cert.validity.notAfter = new Date(Date.now() + years * 365 * 86_400_000)
-    const attrs = [{ name: 'commonName', value: 'Ada Tester' }, { name: 'organizationName', value: 'Acrohat tests' }]
+    const attrs = [{ name: 'commonName', value: 'Ada Tester' }, { name: 'organizationName', value: 'Kwiiva Paper tests' }]
     cert.setSubject(attrs)
     cert.setIssuer(attrs)
     cert.sign(keys.privateKey, forge.md.sha256.create())

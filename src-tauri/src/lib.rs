@@ -50,7 +50,7 @@ pub fn run() {
             Ok(())
         })
         .build(tauri::generate_context!())
-        .expect("error while building Acrohat");
+        .expect("error while building Kwiiva Paper");
 
     app.run(|_handle, _event| {
         // macOS delivers "Open with…" and double-clicks as an event rather than an argument.

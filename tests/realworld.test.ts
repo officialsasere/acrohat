@@ -87,7 +87,7 @@ describe.each(FILES.filter(existsSync))('real-world: %s', (file) => {
       })
     }
 
-    await step('→ Word (.docx)', async () => {
+    await step('→ DOCX', async () => {
       const pages = Array.from({ length: Math.min(doc.pageCount, 30) }, (_, i) => extractBlocks(doc, i))
       const out = buildDocx(pages)
       const n = pages.flat().length

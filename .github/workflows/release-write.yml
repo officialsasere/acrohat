@@ -1,0 +1,17 @@
+name: Release Kwiiva Write
+# Run it from the Actions tab ("Release Kwiiva Write" → "Run workflow"), or push a tag such as write-v0.1.0.
+# The installer file names (KwiivaWrite-Windows-Setup.exe and so on) are what the website's Download buttons point at.
+on:
+  push:
+    tags: ['write-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/desktop-release.yml
+    with: { app: write, title: Kwiiva Write, dir: src-tauri-write, prefix: KwiivaWrite }
+    permissions:
+      contents: write

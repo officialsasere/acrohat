@@ -1,4 +1,5 @@
-# Netlify hosts the website (/) and the web app (/app/). Installers are served by GitHub Releases.
+# Netlify hosts the Kwiiva website (/), each app's page (/paper/, /write/) and its web app (/paper/app/, /write/app/).
+# Installers are served by GitHub Releases. The small function in netlify/functions counts downloads and launches.
 [build]
   command = "npm run build"
   publish = "dist"
@@ -6,10 +7,27 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# `/app` and `/app/` both open the editor.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/write/app"
+  to = "/write/app/"
+  status = 301
+
+# Short links: `/paper/app` opens the editor; the old `/app/` address (before the rename) goes there too.
+[[redirects]]
+  from = "/paper/app"
+  to = "/paper/app/"
+  status = 301
 [[redirects]]
   from = "/app"
-  to = "/app/"
+  to = "/paper/app/"
+  status = 301
+[[redirects]]
+  from = "/app/"
+  to = "/paper/app/"
   status = 301
 
 # Files whose names contain a content hash never change, so browsers may keep them forever.

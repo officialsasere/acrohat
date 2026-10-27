@@ -38,7 +38,7 @@ describe('OCR', () => {
     const worker = await createWorker('eng', 1, {
       langPath: new URL('../node_modules/@tesseract.js-data/eng/4.0.0_best_int', import.meta.url).pathname,
       gzip: true,
-      cachePath: join(tmpdir(), 'acrohat-tess-cache'),
+      cachePath: join(tmpdir(), 'kwiiva-paper-tess-cache'),
     })
     // tesseract.js accepts raw encoded images; hand it a PNG made from the RGBA pixels.
     const { PNG } = await import('pngjs')

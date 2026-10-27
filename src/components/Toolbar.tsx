@@ -122,11 +122,14 @@ export function Toolbar({ onSignature, onSplit, onTools }: { onSignature: () => 
         <button title="Toggle page thumbnails" onClick={s.toggleSidebar}>
           <Icon name="sidebar" />
         </button>
+        <button title="Show or hide the Tools pane" aria-pressed={s.toolsPane} className={s.toolsPane ? 'active' : ''} onClick={s.toggleToolsPane}>
+          <Icon name="panel" />
+        </button>
         <button
           title={`Theme: ${s.theme}`}
           onClick={() => {
             const next = s.theme === 'system' ? 'light' : s.theme === 'light' ? 'dark' : 'system'
-            localStorage.setItem('acrohat.theme', next)
+            localStorage.setItem('kwiiva-paper.theme', next)
             s.set({ theme: next })
           }}
         >

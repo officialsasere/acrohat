@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    acrohat_lib::run();
+    kwiiva_paper_lib::run();
 }

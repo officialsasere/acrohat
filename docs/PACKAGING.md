@@ -1,31 +1,31 @@
 # Packaging & distribution (all free)
 
-## GitHub Releases
-Tag a version (`git tag v0.1.0 && git push --tags`). `.github/workflows/release.yml` builds and attaches installers. Review the draft release, then publish it.
+## GitHub Releases (one workflow per app)
+Run **Actions → Release → Run workflow**, or tag a version (`git tag paper-v0.1.0 && git push --tags`). `.github/workflows/release.yml` builds Kwiiva Paper for every system and publishes two releases: `paper-v0.1.0` (kept) and `paper-latest` (files replaced each time; the website links to it). Another app gets its own `<app>-v*` tags and `<app>-latest` release.
 
 ## Netlify (website + web app)
-Import the repository in Netlify. `netlify.toml` configures everything. The site is `/` and the editor is `/app/`. Add a custom domain under Domain management if you want one (a free `*.netlify.app` name works out of the box).
+Import the repository in Netlify. `netlify.toml` configures everything, including the counter function in `netlify/functions` (free tier; it uses Netlify Blobs). If your site is not `https://kwiiva.netlify.app`, change `STATS_ORIGIN` in `shared/usage.ts` (the desktop apps use it) and the host in the apps' `connect-src` content security policy in the two `tauri.conf.json` files. The Kwiiva home page is `/`, the Kwiiva Paper page is `/paper/` and the editor is `/paper/app/`. Add a custom domain under Domain management if you want one (a free `*.netlify.app` name works out of the box).
 
 ## Homebrew (macOS)
-Create a repo named `homebrew-acrohat` with `Casks/acrohat.rb`:
+Create a repo named `homebrew-kwiiva` with `Casks/kwiiva-paper.rb`:
 ```ruby
-cask "acrohat" do
+cask "kwiiva-paper" do
   version "0.1.0"
   sha256 "<sha256 of the .dmg>"
-  url "https://github.com/officialsasere/acrohat/releases/download/v#{version}/Acrohat_#{version}_aarch64.dmg"
-  name "Acrohat"
+  url "https://github.com/officialsasere/kwiiva/releases/download/paper-v#{version}/Kwiiva.Paper_#{version}_aarch64.dmg"
+  name "Kwiiva Paper"
   desc "Free, open-source PDF reader and editor"
   homepage "https://YOUR-SITE.netlify.app/"
-  app "Acrohat.app"
+  app "Kwiiva Paper.app"
 end
 ```
-Users: `brew tap officialsasere/acrohat && brew install --cask acrohat`. Note Homebrew is tightening its rules for unsigned casks; a personal tap is not affected by the main repo's policy.
+Users: `brew tap officialsasere/kwiiva && brew install --cask kwiiva-paper`. Note Homebrew is tightening its rules for unsigned casks; a personal tap is not affected by the main repo's policy.
 
 ## winget (Windows)
 Submit a manifest PR to `microsoft/winget-pkgs` (`wingetcreate new <msi url>`). Free; requires a stable installer URL.
 
 ## Flathub (Linux)
-Submit a Flatpak manifest to `flathub/flathub`. Free; reviewers require an app-id you control (e.g. `io.github.officialsasere.Acrohat`).
+Submit a Flatpak manifest to `flathub/flathub`. Free; reviewers require an app-id you control (e.g. `io.github.officialsasere.KwiivaPaper`).
 
 ## Code signing (optional, later)
 - **Windows**: apply to [SignPath Foundation](https://signpath.org/) for free signing of open-source projects.

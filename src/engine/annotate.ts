@@ -52,7 +52,7 @@ export function addMarkup(doc: PdfDocument, pageIndex: number, kind: 'highlight'
       const pr = rects.map((r) => space.rectToPage(r))
       for (const r of pr) {
         withBuf(m, 32, (p) => {
-          // Quad order used by Acrobat: top-left, top-right, bottom-left, bottom-right.
+          // Quad order used by PDF viewers: top-left, top-right, bottom-left, bottom-right.
           heapF32(m).set([r.left, r.top, r.right, r.top, r.left, r.bottom, r.right, r.bottom], p >> 2)
           m.FPDFAnnot_AppendAttachmentPoints(annot, p)
         })
@@ -126,7 +126,7 @@ export function addNote(doc: PdfDocument, pageIndex: number, at: [number, number
       setRect(m, annot, { left: x, right: x + 20, top: y, bottom: y - 20 })
       setColor(m, annot, 0, color)
       setString(m, annot, 'Contents', text)
-      setString(m, annot, 'T', 'Acrohat')
+      setString(m, annot, 'T', 'Kwiiva Paper')
     } finally {
       m.FPDFPage_CloseAnnot(annot)
     }

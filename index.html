@@ -3,45 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Acrohat – edit, convert and sign PDFs, free</title>
-  <meta name="description" content="Free, open-source tool to edit, convert and sign PDF files. Edit text in place, export to Word, images and text, and sign with a certificate. Your files never leave your computer." />
+  <title>Kwiiva – free, open-source apps you can trust</title>
+  <meta name="description" content="Kwiiva makes free, open-source apps that run on your own computer. No accounts, no uploads, no subscriptions. First up: Kwiiva Paper, to edit, convert and sign PDFs." />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#8a5a36" />
+  <link rel="apple-touch-icon" href="/kwiiva-180.png" />
   <style>
-    :root { --bg: #fff; --text: #1c1f26; --muted: #5b6577; --accent: #d6342a; --card: #f5f6f8; --border: #dfe3ea; color-scheme: light dark; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #15171b; --text: #e8eaee; --muted: #a3acba; --card: #1e2126; --border: #343a44; } }
+    :root { --bg: #fbf6ee; --text: #2b1d14; --muted: #7a6552; --accent: #8a5a36; --on-accent: #fff; --card: #f3eadc; --border: #e4d5bf; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #17120e; --text: #f1e8dc; --muted: #b8a68f; --accent: #d4a373; --on-accent: #1c1612; --card: #231b15; --border: #43372c; } }
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     body { margin: 0; font: 17px/1.55 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
     main { max-width: 920px; margin: 0 auto; padding: 0 20px 80px; }
-    header { padding: 72px 0 36px; text-align: center; }
-    header img { width: 84px; height: 84px; }
-    h1 { font-size: clamp(34px, 6vw, 54px); line-height: 1.1; margin: 18px 0 12px; letter-spacing: -0.02em; }
-    .lead { font-size: 20px; color: var(--muted); max-width: 640px; margin: 0 auto 28px; }
-    .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    a.btn { display: inline-block; padding: 13px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid var(--border); color: var(--text); }
-    a.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-    a.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-    .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 640px; margin: 0 auto; text-align: left; }
-    .choice { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-    .choice h3 { margin: 0; font-size: 20px; }
-    .choice p { margin: 0 0 10px; color: var(--muted); font-size: 15.5px; }
-    .choice .small { margin: 6px 0 0; }
-    .small { color: var(--muted); font-size: 14px; margin-top: 14px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 48px 0; }
+    header { padding: 72px 0 40px; text-align: center; }
+    header img { width: 88px; height: 88px; }
+    .wordmark { display: block; height: 64px; width: auto; margin: 16px auto 0; }
+    h1 { font-size: clamp(30px, 5.5vw, 46px); line-height: 1.12; margin: 22px 0 12px; letter-spacing: -0.02em; }
+    .lead { font-size: 20px; color: var(--muted); max-width: 640px; margin: 0 auto; }
+    h2 { margin: 48px 0 14px; font-size: 26px; }
+    a.btn { display: inline-block; padding: 12px 22px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid var(--border); color: var(--text); }
+    a.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    a.btn:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+    .product { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .product img { width: 64px; height: 64px; }
+    .product h3 { margin: 6px 0 0; font-size: 22px; }
+    .product p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    .product .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .product .small { font-size: 14px; margin-top: 4px; }
+    .product .more { color: var(--text); font-size: 15px; margin-top: 6px; }
+    .product.soon-card { border-style: dashed; background: transparent; justify-content: center; }
+    .product.soon-card .dots { width: 64px; height: 64px; border-radius: 16px; border: 2px dashed var(--border); display: grid; place-items: center; color: var(--muted); font-size: 28px; }
+    .stats { display: flex; gap: 6px 18px; flex-wrap: wrap; color: var(--muted); font-size: 13.5px; margin: 6px 0 0; }
+    .stats strong { color: var(--text); font-variant-numeric: tabular-nums; }
+    .band { text-align: center; margin: 34px 0 0; padding: 18px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
+    .band .stats { justify-content: center; font-size: 15px; }
+    .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
     .card h3 { margin: 0 0 6px; font-size: 18px; }
     .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
-    h2 { margin: 56px 0 10px; font-size: 28px; }
-    table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
-    td, th { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    code { background: var(--card); padding: 2px 6px; border-radius: 5px; font-size: 14px; }
-    .dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 16px 0; }
-    .dl-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
-    .dl-card.you { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
-    .dl-card h3 { margin: 0; font-size: 20px; }
-    .dl-card p { margin: 0; color: var(--muted); font-size: 14px; }
-    .dl-card .btn { text-align: center; }
-    .dl-card .alt { color: var(--muted); font-size: 14px; }
-    .soon .btn, .soon .alt { opacity: .55; }
     footer { text-align: center; color: var(--muted); font-size: 14px; padding-bottom: 40px; }
     footer a { color: inherit; }
   </style>
@@ -49,118 +49,61 @@
 <body>
 <main>
   <header>
-    <img src="/favicon.svg" alt="" />
-    <h1>Edit, convert and sign PDFs.<br />Free.</h1>
-    <p class="lead"><strong>Edit</strong> text and images in place. <strong>Convert</strong> to Word, text, images and PDF/A. <strong>Sign</strong> with your own certificate and check signatures. Open source, no account, nothing uploaded.</p>
-    <div class="choices">
-      <div class="choice">
-        <h3>Desktop app</h3>
-        <p>Install it on your laptop. Works offline, opens PDFs straight from your files.</p>
-        <a id="download" class="btn primary" href="#downloads">Download</a>
-        <p class="small" id="os-hint">Windows · macOS · Linux</p>
-      </div>
-      <div class="choice">
-        <h3>Web version</h3>
-        <p>Nothing to install. Runs in your browser; your file is never uploaded.</p>
-        <a class="btn" href="app/">Open in browser</a>
-        <p class="small">Chrome, Edge, Firefox, Safari</p>
-      </div>
-    </div>
-    <p class="small" id="download-note">Free forever · MIT licensed · no account</p>
+    <img src="/kwiiva.svg" alt="" />
+    <svg class="wordmark" role="img" aria-label="Kwiiva" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 597 220">
+  <g transform="translate(11 178)"><g fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(0 0)" d="M0 -150V0M85 -150L0 -52M30 -87L90 0"/><path transform="translate(128 0)" d="M0 -100L35 0L70 -100L105 0L140 -100"/><path transform="translate(306 0)" d="M0 -100V0"/><circle transform="translate(306 0)" cx="0" cy="-142" r="15.84" fill="#d49a4a" stroke="none"/><path transform="translate(344 0)" d="M0 -100V0"/><circle transform="translate(344 0)" cx="0" cy="-142" r="15.84" fill="#d49a4a" stroke="none"/><path transform="translate(382 0)" d="M0 -100L40 0L80 -100"/><path transform="translate(500 0)" d="M37 -88A38 38 0 1 0 37 -12A38 38 0 1 0 37 -88ZM75 -100V0"/></g></g>
+</svg>
+    <h1>Free, open-source apps<br />that run on your own computer.</h1>
+    <p class="lead">No accounts, no subscriptions, nothing uploaded. Download an app and it works offline, or try it in your browser first.</p>
   </header>
 
-  <section class="grid" aria-label="Features">
-    <div class="card"><h3>Edit text in place</h3><p>Click a paragraph and type. Lines re-flow inside the original box; missing fonts are replaced with similar ones.</p></div>
-    <div class="card"><h3>Edit images</h3><p>Insert, move, resize, replace and delete images on the page.</p></div>
-    <div class="card"><h3>Annotate &amp; comment</h3><p>Highlight, underline, strike through, draw, shapes, sticky notes and free text, saved as standard PDF annotations.</p></div>
-    <div class="card"><h3>Fill, create &amp; sign forms</h3><p>Fill text fields, checkboxes, radios and dropdowns, or build your own form fields. Draw or type a signature.</p></div>
-    <div class="card"><h3>Digital signatures</h3><p>Sign with your own certificate (.p12 / .pfx), and see whether signed files you open are intact or were changed after signing.</p></div>
-    <div class="card"><h3>Real redaction</h3><p>Remove text and images from the file itself, including by pattern: emails, phone numbers, ID and card numbers.</p></div>
-    <div class="card"><h3>Organize pages</h3><p>Drag to reorder, rotate, delete, insert blanks, merge PDFs, extract, split, crop.</p></div>
-    <div class="card"><h3>Headers, footers &amp; watermarks</h3><p>Page numbers, Bates numbering, dates, DRAFT/CONFIDENTIAL watermarks on any pages.</p></div>
-    <div class="card"><h3>Scans become text (OCR)</h3><p>Make scanned pages searchable, selectable and editable. Runs on your computer.</p></div>
-    <div class="card"><h3>Protect &amp; clean</h3><p>AES-256 passwords with permissions, file-size reduction, remove metadata, scripts and attachments.</p></div>
-    <div class="card"><h3>PDF/A &amp; accessibility</h3><p>Convert to PDF/A-2b for archiving, run a preflight check, and tag documents for screen readers with alt text.</p></div>
-    <div class="card"><h3>Convert &amp; compare</h3><p>Export to Word, text or images; turn images into PDF; compare two versions of a document.</p></div>
-    <div class="card"><h3>Private by design</h3><p>No telemetry, no accounts, nothing uploaded. Fonts, OCR and the PDF engine ship inside the app.</p></div>
+  <h2>Apps</h2>
+  <section class="products" aria-label="Apps" id="apps">
+    <article class="product paper" data-product="paper">
+      <img src="/paper.svg" alt="" />
+      <h3>Kwiiva Paper</h3>
+      <p>Edit, convert and sign PDFs. Change text in place, export to DOCX and images, sign with a certificate, redact, OCR and more.</p>
+      <div class="actions">
+        <a data-role="main" class="btn primary" href="/paper/#downloads">Download</a>
+        <a class="btn" href="/paper/app/">Open in browser</a>
+      </div>
+      <p class="small" data-role="hint">Windows · macOS · Linux</p>
+      <p class="stats" data-stats="paper" hidden><span><strong data-stat="downloads">0</strong> downloads</span><span><strong data-stat="opens">0</strong> launches</span><span><strong data-stat="devices">0</strong> devices</span></p>
+      <a class="more" href="/paper/">Learn more about Kwiiva Paper →</a>
+    </article>
+    <article class="product" data-product="write">
+      <img src="/write.svg" alt="" />
+      <h3>Kwiiva Write</h3>
+      <p>Write letters, reports and resumes with real pages, tables and pictures. Opens and saves DOCX. Autosaves on your device.</p>
+      <div class="actions">
+        <a data-role="main" class="btn primary" href="/write/#downloads">Download</a>
+        <a class="btn" href="/write/app/">Open in browser</a>
+      </div>
+      <p class="small" data-role="hint">Windows · macOS · Linux</p>
+      <p class="stats" data-stats="write" hidden><span><strong data-stat="downloads">0</strong> downloads</span><span><strong data-stat="opens">0</strong> launches</span><span><strong data-stat="devices">0</strong> devices</span></p>
+      <a class="more" href="/write/">Learn more about Kwiiva Write →</a>
+    </article>
+    <article class="product soon-card">
+      <div class="dots" aria-hidden="true">+</div>
+      <h3>More on the way</h3>
+      <p>Kwiiva is a growing family of small, honest tools. New apps will appear here, with the same one-click download.</p>
+    </article>
   </section>
 
-  <h2 id="downloads">Download</h2>
-  <p id="releases-status" class="small">Free. No account. Pick your system:</p>
-  <div class="dl-grid">
-    <div class="dl-card" id="dl-win"><h3>Windows</h3><p>Windows 10 or 11</p>
-      <a class="btn primary" data-file="Acrohat-Windows-Setup.exe">Download for Windows</a>
-      <a class="alt" data-file="Acrohat-Windows.msi">.msi installer (IT deployment)</a></div>
-    <div class="dl-card" id="dl-mac"><h3>macOS</h3><p>macOS 11 or newer</p>
-      <a class="btn primary" data-file="Acrohat-macOS-AppleSilicon.dmg">Apple silicon (M1 and newer)</a>
-      <a class="btn" data-file="Acrohat-macOS-Intel.dmg">Intel Mac</a></div>
-    <div class="dl-card" id="dl-linux"><h3>Linux</h3><p>Any recent distribution</p>
-      <a class="btn primary" data-file="Acrohat-Linux.AppImage">Download .AppImage</a>
-      <a class="alt" data-file="Acrohat-Linux.deb">.deb for Debian / Ubuntu</a></div>
+  <div class="band" aria-label="Usage so far">
+    <strong>Used by real people</strong>
+    <p class="small" style="margin:4px 0 0">Counted anonymously: downloads from this site and app launches. No names, no files, no tracking.</p>
+    <p class="stats" data-stats="all" hidden><span><strong data-stat="downloads">0</strong> downloads</span><span><strong data-stat="opens">0</strong> launches</span><span><strong data-stat="devices">0</strong> devices</span></p>
   </div>
-  <p class="small">Don't want to install anything? <a href="app/">Use Acrohat in your browser</a>. Need an older version or the source? <a href="REPO_URL/releases">See all releases</a>.</p>
 
-  <h2>Installing an unsigned app</h2>
-  <p>Acrohat is a free project and the installers are not yet signed with paid developer certificates, so your OS will warn you the first time:</p>
-  <table>
-    <tr><th>macOS</th><td>Drag Acrohat to Applications, then <strong>right-click → Open → Open</strong> (once). If macOS says the app is "damaged", run <code>xattr -cr /Applications/Acrohat.app</code> in Terminal.</td></tr>
-    <tr><th>Windows</th><td>If SmartScreen appears, choose <strong>More info → Run anyway</strong>.</td></tr>
-    <tr><th>Linux</th><td>Make the AppImage executable (<code>chmod +x</code>) and run it, or install the <code>.deb</code>.</td></tr>
-  </table>
-  <p>Prefer to verify? The <a href="REPO_URL">source is public</a> and the installers are built by public GitHub Actions runs.</p>
-
-  </main>
-<footer>MIT licensed · <a id="repo" href="#">Source on GitHub</a></footer>
-
-<script>
-  // Where the installers live (GitHub Releases); the website itself is hosted on Netlify.
-  const REPO = { owner: 'officialsasere', name: 'acrohat' }
-  const repoUrl = `https://github.com/${REPO.owner}/${REPO.name}`
-  // "latest/download/<file>" always points at the newest release, so these links never go stale and
-  // clicking one starts the download immediately.
-  const direct = (file) => `${repoUrl}/releases/latest/download/${file}`
-
-  document.getElementById('repo').href = repoUrl
-  document.querySelectorAll('a[href^="REPO_URL"]').forEach(a => a.href = a.getAttribute('href').replace('REPO_URL', repoUrl))
-  document.querySelectorAll('a[data-file]').forEach(a => { a.href = direct(a.dataset.file); a.setAttribute('download', '') })
-
-  // Highlight the visitor's system and make the mainBtn button download for it in one click.
-  const ua = navigator.userAgent, plat = navigator.platform || ''
-  const os = /Android|iPhone|iPad|iPod/i.test(ua) ? 'mobile' : /Mac/i.test(plat) ? 'mac' : /Win/i.test(plat) ? 'win' : /Linux|X11/i.test(plat + ua) ? 'linux' : 'other'
-  const mainBtn = document.getElementById('download')
-  const hint = document.getElementById('os-hint')
-  async function mac() {
-    // Chromium can tell us the chip; Safari/Firefox can't, and almost every Mac sold since 2020 is Apple silicon.
-    try { const h = await navigator.userAgentData?.getHighEntropyValues(['architecture']); if (h && h.architecture === 'x86') return 'Acrohat-macOS-Intel.dmg' } catch {}
-    return 'Acrohat-macOS-AppleSilicon.dmg'
-  }
-  ;(async () => {
-    const choice = { win: ['Acrohat-Windows-Setup.exe', 'Windows', 'dl-win'], linux: ['Acrohat-Linux.AppImage', 'Linux', 'dl-linux'] }[os]
-    if (os === 'mac') {
-      const f = await mac()
-      mainBtn.href = direct(f); mainBtn.setAttribute('download', ''); mainBtn.textContent = 'Download for macOS'
-      hint.innerHTML = f.includes('Intel') ? 'Intel Mac detected' : 'Apple silicon. <a href="#downloads">Intel Mac?</a>'
-      document.getElementById('dl-mac').classList.add('you')
-    } else if (choice) {
-      mainBtn.href = direct(choice[0]); mainBtn.setAttribute('download', ''); mainBtn.textContent = 'Download for ' + choice[1]
-      hint.textContent = `Detected: ${choice[1]}. Other systems below.`
-      document.getElementById(choice[2]).classList.add('you')
-    } else {
-      mainBtn.href = '#downloads'; mainBtn.textContent = 'See downloads'
-      hint.textContent = os === 'mobile' ? 'On a phone? Use the browser version.' : 'Windows · macOS · Linux'
-    }
-  })()
-
-  // If no release has been published yet, say so politely instead of sending people to a 404.
-  fetch(`https://api.github.com/repos/${REPO.owner}/${REPO.name}/releases/latest`).then(r => r.ok ? r.json() : Promise.reject()).then(rel => {
-    document.getElementById('releases-status').textContent = `Latest version: ${rel.tag_name}. Free, no account.`
-  }).catch(() => {
-    document.querySelectorAll('.dl-card').forEach(c => c.classList.add('soon'))
-    document.querySelectorAll('a[data-file], #download').forEach(a => { a.href = 'app/'; a.removeAttribute('download') })
-    mainBtn.textContent = 'Open in browser'
-    hint.textContent = 'Installers are being prepared. The browser version works right now.'
-    document.getElementById('releases-status').innerHTML = 'Installers are being prepared. <a href="app/">Use Acrohat in your browser</a> in the meantime.'
-  })
-</script>
+  <h2>What we stand for</h2>
+  <section class="principles">
+    <div class="card"><h3>Free, for real</h3><p>No trial, no paywalled features, no account. MIT licensed.</p></div>
+    <div class="card"><h3>Private by design</h3><p>Your files stay on your computer. No uploads and no tracking of what you do; only anonymous download and launch counts, shown on this page.</p></div>
+    <div class="card"><h3>Open source</h3><p>Read the code, build it yourself, or help improve it. Every installer is built by a public GitHub Actions run.</p></div>
+  </section>
+</main>
+<footer>Kwiiva · MIT licensed · <a data-repo-link href="#">Source on GitHub</a></footer>
+<script src="/site.js"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@ import { zipSync, strToU8 } from 'fflate'
 import type { TextBlock } from './text'
 
 /**
- * Builds a basic Word document from text blocks. It keeps text, paragraph breaks, headings (by size),
+ * Builds a basic DOCX document from text blocks. It keeps text, paragraph breaks, headings (by size),
  * bold/italic and page breaks; it does not reproduce layout, images or tables.
  */
 

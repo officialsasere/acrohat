@@ -1,6 +1,21 @@
-<p align="center"><img src="public/logo.svg" width="120" alt="Acrohat logo" /></p>
+<p align="center"><img src="public/kwiiva-lockup.svg" width="300" alt="Kwiiva" /></p>
 
-# Acrohat
+# Kwiiva
+
+Free, open-source apps that run on your own computer. No accounts, no uploads, no subscriptions. This repository is the home of the Kwiiva website and every Kwiiva app.
+
+| App | What it is | |
+|---|---|---|
+| <img src="public/paper.svg" width="28" alt="" /> **Kwiiva Paper** | Edit, convert and sign PDFs | [details below](#kwiiva-paper) · web version at `/paper/app/` |
+| <img src="public/write.svg" width="28" alt="" /> **Kwiiva Write** | Write documents, open and save DOCX | [details below](#kwiiva-write) · web version at `/write/app/` |
+
+More apps will be added here.
+
+---
+
+<p align="center"><img src="public/paper-lockup.svg" width="300" alt="Kwiiva Paper" /></p>
+
+# Kwiiva Paper
 
 **Edit, convert and sign PDFs, free and open source,** on Windows, macOS, Linux and in the browser. No account, no upload, no subscription. Your files never leave your computer.
 
@@ -21,21 +36,21 @@
 | **Stamp** | Page numbers, Bates numbers, dates, headers/footers, watermarks |
 | **OCR** | Makes scanned pages searchable and editable (English, runs locally) |
 | **Protect / clean** | AES-256 encryption with permissions, file-size optimization, remove metadata/scripts/attachments, edit properties |
-| **Convert** | PDF → Word (.docx, text and headings), text, PNG; images → PDF |
+| **Convert** | PDF → DOCX (text and headings), text, PNG; images → PDF |
 | **Compare** | Paragraph-level text diff of two documents |
 | **Undo/redo** | For every change |
 
 ## Honest limitations
 
-Read these before trusting Acrohat with something important.
+Read these before trusting Kwiiva Paper with something important.
 
-- **Text editing is paragraph-based.** PDFs store positioned glyphs, not paragraphs, so Acrohat reconstructs paragraphs by layout analysis. Mixed styles inside an edited paragraph (e.g. one bold word) take the style of the first run once the edit touches that line. Text can't flow across columns or pages. Rotated and vertical text are untested.
-- **Digital signatures** are real (PKCS#7 detached), but trust is up to the recipient: a self-signed certificate shows as unverified in Acrobat. Signing produces a *copy*; re-saving a signed file in any editor (including this one) invalidates the signature. Validation checks that the signed content and signature are intact; Acrohat has no trusted-root store, so it cannot tell you the signer's identity is certified. Only one signature per file can be added, and it can't be added incrementally to an already-signed file.
-- **PDF/A-2b conversion is not certified.** It is Acrohat's own implementation, tested against its own checker but **not against the official veraPDF validator**. Colours in page content are not converted (DeviceCMYK pages need a CMYK intent), and unusual fonts (Type 3, exotic encodings) may still fail. Validate files that need guaranteed compliance with veraPDF.
+- **Text editing is paragraph-based.** PDFs store positioned glyphs, not paragraphs, so Kwiiva Paper reconstructs paragraphs by layout analysis. Mixed styles inside an edited paragraph (e.g. one bold word) take the style of the first run once the edit touches that line. Text can't flow across columns or pages. Rotated and vertical text are untested.
+- **Digital signatures** are real (PKCS#7 detached), but trust is up to the recipient: a self-signed certificate shows as unverified in most PDF readers. Signing produces a *copy*; re-saving a signed file in any editor (including this one) invalidates the signature. Validation checks that the signed content and signature are intact; Kwiiva Paper has no trusted-root store, so it cannot tell you the signer's identity is certified. Only one signature per file can be added, and it can't be added incrementally to an already-signed file.
+- **PDF/A-2b conversion is not certified.** It is Kwiiva Paper's own implementation, tested against its own checker but **not against the official veraPDF validator**. Colours in page content are not converted (DeviceCMYK pages need a CMYK intent), and unusual fonts (Type 3, exotic encodings) may still fail. Validate files that need guaranteed compliance with veraPDF.
 - **Accessibility tagging is automatic and layout-based.** It assigns headings by font size and reading order by position; tables, lists and multi-column layouts are tagged as plain paragraphs. It has not been checked with PAC or Acrobat's checker.
-- **Not implemented:** Adobe Sign / cloud services, PDF/X and print Preflight, XFA forms, 3D/multimedia, creating PDFs from Office documents, Excel/PowerPoint export, image-based layout in Word export.
+- **Not implemented:** cloud signing services, PDF/X and print Preflight, XFA forms, 3D/multimedia, creating PDFs from Office documents, Excel/PowerPoint export, image-based layout in Word export.
 - **OCR is English-only** for now, and the recognized text layer is only as good as the scan.
-- Characters outside the bundled fonts (e.g. CJK) can't be *typed* into an edit; Acrohat refuses the edit instead of writing broken glyphs. Existing CJK text is preserved.
+- Characters outside the bundled fonts (e.g. CJK) can't be *typed* into an edit; Kwiiva Paper refuses the edit instead of writing broken glyphs. Existing CJK text is preserved.
 - Redaction removes whole text objects that touch the box, which can remove a little more text than the box covers. Always check the result.
 - The installers are **not code-signed** yet (see below).
 
@@ -45,23 +60,71 @@ Read these before trusting Acrohat with something important.
 
 | System | Download |
 |---|---|
-| Windows | [Acrohat-Windows-Setup.exe](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Windows-Setup.exe) · [.msi](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Windows.msi) |
-| macOS (Apple silicon) | [Acrohat-macOS-AppleSilicon.dmg](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-macOS-AppleSilicon.dmg) |
-| macOS (Intel) | [Acrohat-macOS-Intel.dmg](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-macOS-Intel.dmg) |
-| Linux | [Acrohat-Linux.AppImage](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Linux.AppImage) · [.deb](https://github.com/officialsasere/acrohat/releases/latest/download/Acrohat-Linux.deb) |
+| Windows | [KwiivaPaper-Windows-Setup.exe](https://github.com/officialsasere/kwiiva/releases/download/paper-latest/KwiivaPaper-Windows-Setup.exe) · [.msi](https://github.com/officialsasere/kwiiva/releases/download/paper-latest/KwiivaPaper-Windows.msi) |
+| macOS (Apple silicon) | [KwiivaPaper-macOS-AppleSilicon.dmg](https://github.com/officialsasere/kwiiva/releases/download/paper-latest/KwiivaPaper-macOS-AppleSilicon.dmg) |
+| macOS (Intel) | [KwiivaPaper-macOS-Intel.dmg](https://github.com/officialsasere/kwiiva/releases/download/paper-latest/KwiivaPaper-macOS-Intel.dmg) |
+| Linux | [KwiivaPaper-Linux.AppImage](https://github.com/officialsasere/kwiiva/releases/download/paper-latest/KwiivaPaper-Linux.AppImage) · [.deb](https://github.com/officialsasere/kwiiva/releases/download/paper-latest/KwiivaPaper-Linux.deb) |
 
-Or use it in the browser, nothing to install: open the website and choose **Open in browser** (`/app/`).
+Or use it in the browser, nothing to install: open the website and choose **Open in browser** (`/paper/app/`; on a phone too: open it in your mobile browser and choose **Add to Home Screen** to install it like an app).
 
 Because signing certificates cost money, your OS will warn you the first time:
 
-- **macOS**: right-click the app → **Open** → **Open**. If it says the app is damaged: `xattr -cr /Applications/Acrohat.app`.
+- **macOS**: right-click the app → **Open** → **Open**. If it says the app is damaged: `xattr -cr "/Applications/Kwiiva Paper.app"`.
 - **Windows**: SmartScreen → **More info → Run anyway**.
-- **Linux**: `chmod +x Acrohat*.AppImage` and run it, or install the `.deb`.
+- **Linux**: `chmod +x KwiivaPaper*.AppImage` and run it, or install the `.deb`.
+
+## Kwiiva Write
+
+<p align="center"><img src="public/write-lockup.svg" width="300" alt="Kwiiva Write" /></p>
+
+**Write letters, reports, resumes and notes, free and open source,** on Windows, macOS, Linux, in the browser and on your phone. No account, nothing uploaded; drafts are kept on your device as you type.
+
+| | |
+|---|---|
+| **Pages** | Real pages (Letter, A4, A5, Legal, A3) with margins, portrait or landscape, headers, footers and page numbers. Lines are never cut by a page break; headings stay with their text |
+| **Text** | Fonts, sizes, bold, italic, underline, strikethrough, super/subscript, colours, highlights, styles (Title, Subtitle, Heading 1–6, Quote, Code), alignment, line and paragraph spacing, indents, tabs |
+| **Structure** | Bulleted, numbered and check lists (nested), tables (merge, split, shade, resize), pictures (paste, drop, resize), links, horizontal lines, page breaks, a table of contents that updates itself, special characters |
+| **Review** | Find and replace (match case, whole word), outline of headings, document statistics, read aloud, browser spell checking |
+| **Files** | Open and save **.docx** (text, styles, lists, tables with merged cells, pictures, links, page setup, headers and footers), plus HTML, Markdown and plain text; print or save as PDF |
+| **Safety net** | Autosaved drafts in your browser, a Recent list, start-from-a-template screen (letter, resume, report, meeting notes, project plan) |
+| **Phones** | Layout adapts to small screens, a full-screen menu, finger-sized buttons; install it from the browser with **Add to Home Screen** |
+
+### Honest limitations (Kwiiva Write)
+- **No real-time collaboration, comments or tracked changes yet.** Documents live on your device; share them as files.
+- **.docx fidelity is good for ordinary documents, not perfect.** Text boxes, shapes, columns, footnotes, equations and tracked changes in files you open are not kept. Always check an important file after opening it.
+- **PDF export uses your system's print dialog** ("Save as PDF"). Page numbers in printed headers and footers rely on the browser supporting page margin boxes (Chrome and Edge do; Safari does not yet).
+- **Layout can differ slightly from other editors** because the page is laid out by the browser. The bundled fonts have the same widths as common office fonts, so line breaks normally match.
+- **Phones:** it runs in the mobile browser and installs to the home screen. There is no store app yet.
+
+### Install (Kwiiva Write)
+
+| System | Download |
+|---|---|
+| Windows | [KwiivaWrite-Windows-Setup.exe](https://github.com/officialsasere/kwiiva/releases/download/write-latest/KwiivaWrite-Windows-Setup.exe) · [.msi](https://github.com/officialsasere/kwiiva/releases/download/write-latest/KwiivaWrite-Windows.msi) |
+| macOS (Apple silicon) | [KwiivaWrite-macOS-AppleSilicon.dmg](https://github.com/officialsasere/kwiiva/releases/download/write-latest/KwiivaWrite-macOS-AppleSilicon.dmg) |
+| macOS (Intel) | [KwiivaWrite-macOS-Intel.dmg](https://github.com/officialsasere/kwiiva/releases/download/write-latest/KwiivaWrite-macOS-Intel.dmg) |
+| Linux | [KwiivaWrite-Linux.AppImage](https://github.com/officialsasere/kwiiva/releases/download/write-latest/KwiivaWrite-Linux.AppImage) · [.deb](https://github.com/officialsasere/kwiiva/releases/download/write-latest/KwiivaWrite-Linux.deb) |
+
+The same first-run warnings as Kwiiva Paper apply (the installers are not code-signed). Or use it in the browser at `/write/app/`.
+
+## Privacy
+
+Your documents and PDFs never leave your device, and nothing in them is read by anyone but you. There are no accounts and no tracking of what you do inside the apps.
+
+The website shows how much Kwiiva is used. To make that possible:
+- **Downloads** from the website go through a tiny counter (`netlify/functions/stats.mts`) that adds one to a total and sends you on to GitHub.
+- **Launches:** each app sends one small message when it opens: the app name, "web" or "desktop", and whether this is its first launch on this device. There is no ID, no file name, no text, and the server does not store your address. The result is three public numbers per app: downloads, launches and devices (first launches).
+- **You can turn it off** in the app (Kwiiva Write: Help → Privacy and counters; Kwiiva Paper: the start screen). The apps work the same either way.
+- Developers running the app locally and automated tests are not counted. Because anyone could send fake messages, treat the numbers as approximate.
+
+## Contributing
+
+Kwiiva is open source and made to be easy to join: read [CONTRIBUTING.md](CONTRIBUTING.md) (set up in 10 minutes, `npm run check` before a pull request), pick an issue labelled **good first issue**, or just report a PDF that comes out wrong. Everyone is welcome under our [Code of Conduct](CODE_OF_CONDUCT.md). See the [changelog](CHANGELOG.md) for what changed.
 
 ## Build from source
 
 ```bash
-git clone https://github.com/officialsasere/acrohat && cd acrohat
+git clone https://github.com/officialsasere/kwiiva && cd kwiiva
 npm install
 npm run dev            # web app
 npm run tauri dev      # desktop app (needs Rust + Tauri prerequisites)
@@ -85,7 +148,7 @@ Text editing works on PDFium's page objects: group text runs into lines and para
 
 ## Hosting & releases (maintainers)
 
-- **Website and web app: Netlify.** Connect the GitHub repo in Netlify (Add new site → Import from Git). `netlify.toml` already sets the build command (`npm run build`), publish folder (`dist`) and Node version; no other settings are needed. The landing page is served at `/` and the editor at `/app/`. Every push to `main` redeploys.
+- **Website and web app: Netlify.** Connect the GitHub repo in Netlify (Add new site → Import from Git). `netlify.toml` already sets the build command (`npm run build`), publish folder (`dist`) and Node version; no other settings are needed. The Kwiiva home page is served at `/`, the Kwiiva Paper page at `/paper/` and the editor at `/paper/app/`. Every push to `main` redeploys.
 - **Installers: GitHub Releases.** Actions → **Release** → **Run workflow** (or push a tag like `v0.1.0`) builds macOS (Apple silicon + Intel), Windows and Linux installers and publishes them under fixed names, so the website's Download button links straight to them.
 - CI (`.github/workflows/ci.yml`) runs the type check, lint, unit tests and browser tests on every push and pull request.
 - Package managers (Homebrew tap, winget, Flathub) are free; see [docs/PACKAGING.md](docs/PACKAGING.md).

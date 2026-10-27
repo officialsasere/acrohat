@@ -18,7 +18,8 @@ export function Viewer() {
       const st = useStore.getState()
       if (!st.fitWidth) return
       const w = Math.max(...doc.info.sizes.map((s) => s.width))
-      const z = Math.min(3, Math.max(0.25, (el.clientWidth - 48) / w))
+      const gutter = el.clientWidth <= 720 ? 20 : 48
+      const z = Math.min(3, Math.max(0.25, (el.clientWidth - gutter) / w))
       if (Math.abs(z - st.zoom) > 0.005) useStore.setState({ zoom: z })
     }
     apply()
@@ -77,6 +78,35 @@ export function Viewer() {
     }
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
+  // Two-finger pinch zooms (touch screens).
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    let start = 0, startZoom = 1, raf = 0
+    const span = (e: TouchEvent) => Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY)
+    const onStart = (e: TouchEvent) => {
+      if (e.touches.length !== 2) return
+      start = span(e)
+      startZoom = useStore.getState().zoom
+    }
+    const onMove = (e: TouchEvent) => {
+      if (e.touches.length !== 2 || !start) return
+      e.preventDefault()
+      const z = startZoom * (span(e) / start)
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => useStore.getState().setZoom(z))
+    }
+    const onEnd = (e: TouchEvent) => { if (e.touches.length < 2) start = 0 }
+    el.addEventListener('touchstart', onStart, { passive: true })
+    el.addEventListener('touchmove', onMove, { passive: false })
+    el.addEventListener('touchend', onEnd, { passive: true })
+    return () => {
+      el.removeEventListener('touchstart', onStart)
+      el.removeEventListener('touchmove', onMove)
+      el.removeEventListener('touchend', onEnd)
+    }
   }, [])
 
   // Jump to search hits.

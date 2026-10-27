@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
     delete (window as never as Record<string, unknown>).showOpenFilePicker
     delete (window as never as Record<string, unknown>).showSaveFilePicker
   })
-  await page.goto('/app/')
+  await page.goto('/paper/app/')
 })
 
 async function open(page: import('@playwright/test').Page) {
@@ -278,7 +278,15 @@ test('bookmarks and links navigate', async ({ page }) => {
 test('inserts, moves and deletes an image', async ({ page }) => {
   await open(page)
   await page.getByTitle(/^Edit images/).click()
-  const box = (await page.locator('.page[data-page="0"]').boundingBox())!
+  // Fit-to-width is still settling right after opening; measure once the page size stops changing.
+  let box = (await page.locator('.page[data-page="0"]').boundingBox())!
+  for (let i = 0; i < 20; i++) {
+    await page.waitForTimeout(100)
+    const next = (await page.locator('.page[data-page="0"]').boundingBox())!
+    const same = Math.abs(next.width - box.width) < 0.5 && Math.abs(next.x - box.x) < 0.5 && Math.abs(next.y - box.y) < 0.5
+    box = next
+    if (same) break
+  }
   const z = box.width / 612
   const chooser = page.waitForEvent('filechooser')
   await page.mouse.click(box.x + 300 * z, box.y + 300 * z)
@@ -314,7 +322,7 @@ test('crops all pages and creates a form field you can fill', async ({ page }) =
   await expect(page.getByTitle(/^Undo/)).toBeEnabled()
 })
 
-test('signs with a certificate and exports a Word file', async ({ page }) => {
+test('signs with a certificate and exports a DOCX file', async ({ page }) => {
   await open(page)
   await openTools(page, 'Certificate signature')
   await page.locator('input[type="file"]').setInputFiles('tests/fixtures/test-cert.p12')
@@ -330,7 +338,7 @@ test('signs with a certificate and exports a Word file', async ({ page }) => {
   expect(text).toContain('(Test Signer)')
   await openTools(page, 'Export & convert')
   const dl2 = page.waitForEvent('download')
-  await page.locator('.card-row', { hasText: 'Word document' }).getByRole('button', { name: 'Export' }).click()
+  await page.locator('.card-row', { hasText: 'Document (.docx)' }).getByRole('button', { name: 'Export' }).click()
   const docx = readFileSync((await (await dl2).path())!)
   expect(docx.subarray(0, 2).toString()).toBe('PK')
 })
@@ -421,23 +429,23 @@ test('edit, convert and sign a real-world PDF through the UI', async ({ page }) 
   const editor = page.locator('.block-editor')
   const original = await editor.inputValue()
   expect(original).not.toMatch(/[\u0002­]/) // line-end hyphen marks are joined, not shown
-  await editor.fill(original + ' This sentence was added with Acrohat.')
+  await editor.fill(original + ' This sentence was added with Kwiiva Paper.')
   await page.locator('.titlebar').click()
   await expect(page.getByTitle(/^Undo/)).toBeEnabled()
   await page.getByTitle(/^Find/).click()
-  await page.getByPlaceholder('Find in document').fill('added with Acrohat')
+  await page.getByPlaceholder('Find in document').fill('added with Kwiiva Paper')
   await page.keyboard.press('Enter')
   await expect(page.locator('.searchbar .count')).toHaveText('1 of 1')
 
-  // CONVERT: Word export contains the document's words.
+  // CONVERT: DOCX export contains the document's words.
   await openTools(page, 'Export & convert')
   const wordDl = page.waitForEvent('download')
-  await page.locator('.card-row', { hasText: 'Word document' }).getByRole('button', { name: 'Export' }).click()
+  await page.locator('.card-row', { hasText: 'Document (.docx)' }).getByRole('button', { name: 'Export' }).click()
   const docx = readFileSync((await (await wordDl).path())!)
   const { unzipSync, strFromU8 } = await import('fflate')
   const xml = strFromU8(unzipSync(new Uint8Array(docx))['word/document.xml'])
   expect(xml).toContain('Bash')
-  expect(xml).toContain('added with Acrohat')
+  expect(xml).toContain('added with Kwiiva Paper')
   await page.locator('.modal-close').click()
 
   // SIGN: a certificate signature over the edited file, then validate it by reopening.
@@ -490,4 +498,22 @@ test('a paragraph that grows into the next one asks what to do, and can push the
   await expect(blocks).toHaveCount(3) // two paragraphs and the footer, none merged
   const boxes = await blocks.evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).sort((a, b) => a.top - b.top))
   expect(boxes[0].bottom).toBeLessThanOrEqual(boxes[1].top + 1) // first no longer overlaps second
+})
+
+test('the Tools pane and left rail work like the other PDF editors people know', async ({ page }) => {
+  await open(page)
+  // Right-hand "Tools" list: one click picks a tool or opens its settings.
+  await page.getByRole('button', { name: /Edit a PDF/ }).click()
+  await expect(page.getByTitle(/^Edit text/)).toHaveAttribute('aria-pressed', 'true')
+  await page.getByRole('button', { name: /Redact a PDF/ }).click()
+  await expect(page.getByRole('heading', { name: /redact/i }).first()).toBeVisible()
+  await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+  await page.getByRole('button', { name: 'Close tools pane' }).click()
+  await expect(page.locator('.toolspane')).toHaveCount(0)
+  // Left rail: thumbnails and bookmarks toggle the panel beside it.
+  await expect(page.locator('.sidebar')).toBeVisible()
+  await page.getByRole('button', { name: 'Bookmarks' }).click()
+  await expect(page.locator('.sidebar-tabs [aria-selected="true"]')).toHaveText('Bookmarks')
+  await page.getByRole('button', { name: 'Bookmarks' }).click()
+  await expect(page.locator('.sidebar')).toHaveCount(0)
 })

@@ -1,0 +1,26 @@
+name: Bug report
+description: Something does not work or a PDF comes out wrong
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations: { required: true }
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did you use it?
+      options: [Desktop app (Windows), Desktop app (macOS), Desktop app (Linux), Web version in a desktop browser, Web version on a phone or tablet]
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      label: Version or browser
+      placeholder: "0.1.0, or Chrome 130"
+  - type: textarea
+    id: file
+    attributes:
+      label: The PDF
+      description: Drag the file here if it contains nothing private. Otherwise say what produced it (scanner, an office suite, a design app…).

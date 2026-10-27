@@ -35,6 +35,7 @@ interface State {
   fitWidth: boolean
   page: number
   sidebar: boolean
+  toolsPane: boolean
   color: string
   strokeWidth: number
   fontSize: number
@@ -57,6 +58,7 @@ interface State {
   setPage: (p: number) => void
   goToPage: (p: number) => void
   toggleSidebar: () => void
+  toggleToolsPane: () => void
   set: (p: Partial<State>) => void
   toast: (kind: Toast['kind'], text: string) => void
   dismissToast: (id: number) => void
@@ -79,7 +81,8 @@ export const useStore = create<State>((set, get) => ({
   zoom: 1.25,
   fitWidth: true,
   page: 0,
-  sidebar: true,
+  toolsPane: typeof window !== 'undefined' && window.innerWidth >= 1180, // open on a laptop or bigger, a drawer on small screens
+  sidebar: !(typeof window !== 'undefined' && window.matchMedia?.('(max-width: 720px)').matches), // a drawer on phones, so start closed
   color: '#ffd400',
   strokeWidth: 2,
   fontSize: 14,
@@ -87,8 +90,8 @@ export const useStore = create<State>((set, get) => ({
   search: { query: '', hits: [], index: -1, open: false, matchCase: false },
   selectedPages: [],
   pendingScroll: null,
-  theme: (localStorage.getItem('acrohat.theme') as State['theme']) || 'system',
-  signature: localStorage.getItem('acrohat.signature'),
+  theme: (localStorage.getItem('kwiiva-paper.theme') as State['theme']) || 'system',
+  signature: localStorage.getItem('kwiiva-paper.signature'),
   fields: [],
   overflowPrompt: null,
   askOverflow: (d) => new Promise((resolve) => set({ overflowPrompt: { ...d, resolve: (c) => { set({ overflowPrompt: null }); resolve(c) } } })),
@@ -102,6 +105,7 @@ export const useStore = create<State>((set, get) => ({
   setPage: (page) => set({ page }),
   goToPage: (p) => set({ pendingScroll: p, page: p }),
   toggleSidebar: () => set((s) => ({ sidebar: !s.sidebar })),
+  toggleToolsPane: () => set((s) => ({ toolsPane: !s.toolsPane })),
   set: (p) => set(p),
 
   toast: (kind, text) => {

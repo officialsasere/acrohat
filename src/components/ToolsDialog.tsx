@@ -8,7 +8,7 @@ import { useStore } from '../store'
 import { downloadBlob, Modal } from './Dialogs'
 import { Icon } from './Icons'
 
-type Section = 'pdfa' | 'access' | 'stamp' | 'pages' | 'redact' | 'sign' | 'protect' | 'props' | 'forms' | 'convert' | 'ocr' | 'compare'
+export type Section = 'pdfa' | 'access' | 'stamp' | 'pages' | 'redact' | 'sign' | 'protect' | 'props' | 'forms' | 'convert' | 'ocr' | 'compare'
 
 const NAV: { id: Section; label: string; icon: string; needsDoc: boolean }[] = [
   { id: 'stamp', label: 'Header, footer & watermark', icon: 'text', needsDoc: true },
@@ -289,16 +289,16 @@ function PdfASection({ doc, guard, busy, onClose }: Common) {
   return (
     <>
       <h3>PDF/A &amp; preflight</h3>
-      <p className="hint">PDF/A-2b is the archival format: every font embedded, colours declared, no scripts or encryption. Acrohat re-sets non-embedded text in metric-compatible embedded fonts (so layout is preserved), adds the required metadata and colour profile, and removes forbidden features.</p>
+      <p className="hint">PDF/A-2b is the archival format: every font embedded, colours declared, no scripts or encryption. Kwiiva Paper re-sets non-embedded text in metric-compatible embedded fonts (so layout is preserved), adds the required metadata and colour profile, and removes forbidden features.</p>
       <label className="row"><input type="checkbox" checked={flatten} onChange={(e) => setFlatten(e.target.checked)} /> Flatten comments and form fields (recommended: their appearances often use non-embedded fonts)</label>
       <div className="actions"><span className="spacer" /><button disabled={busy} onClick={check}>Check only</button><button className="primary" disabled={busy} onClick={convert}>Convert to PDF/A-2b</button></div>
       {report && (
         <>
-          <p className={'hint ' + (report.passesChecks ? 'ok' : 'bad')}>{report.passesChecks ? 'No problems found by Acrohat\'s checks.' : 'Problems found:'}</p>
+          <p className={'hint ' + (report.passesChecks ? 'ok' : 'bad')}>{report.passesChecks ? 'No problems found by Kwiiva Paper\'s checks.' : 'Problems found:'}</p>
           <Issues issues={report.issues} />
         </>
       )}
-      <p className="hint"><strong>Be aware:</strong> this is Acrohat's own conversion and checker. It has not been certified by the official validator (veraPDF). If you need guaranteed compliance for a legal or archival requirement, validate the result with veraPDF.</p>
+      <p className="hint"><strong>Be aware:</strong> this is Kwiiva Paper's own conversion and checker. It has not been certified by the official validator (veraPDF). If you need guaranteed compliance for a legal or archival requirement, validate the result with veraPDF.</p>
     </>
   )
 }
@@ -345,7 +345,7 @@ function AccessSection({ doc, guard, busy }: Common) {
       {report && (
         <>
           <p className="hint"><strong>{report.tagged ? 'Tagged' : 'Not tagged'}</strong>{report.tagged ? `: ${report.headings} headings, ${report.paragraphs} paragraphs, ${report.figures} figures` : ''}</p>
-          {report.issues.length === 0 ? <p className="hint ok">No problems found by Acrohat's checks.</p> : <Issues issues={report.issues} />}
+          {report.issues.length === 0 ? <p className="hint ok">No problems found by Kwiiva Paper's checks.</p> : <Issues issues={report.issues} />}
         </>
       )}
     </>
@@ -392,7 +392,7 @@ function SignSection({ doc, guard, busy, onClose }: Common) {
               <div>
                 <strong>{sg.signer}</strong> <span className="hint">{sg.status === 'valid' ? 'content unchanged since signing' : sg.status === 'modified' ? 'CONTENT CHANGED AFTER SIGNING' : sg.status === 'invalid' ? 'SIGNATURE INVALID' : sg.problem ?? 'could not be checked'}</span>
                 <p className="hint">
-                  {sg.issuer && <>Issued by {sg.issuer}{sg.selfSigned ? ' (self-signed: identity not independently verified)' : ' (Acrohat has no trusted-root list, so the issuer is not verified)'}. </>}
+                  {sg.issuer && <>Issued by {sg.issuer}{sg.selfSigned ? ' (self-signed: identity not independently verified)' : ' (Kwiiva Paper has no trusted-root list, so the issuer is not verified)'}. </>}
                   {sg.signedAt && <>Signed {new Date(sg.signedAt).toLocaleString()}. </>}
                   {sg.validTo && <>Certificate {sg.certificateExpired ? 'expired' : 'valid until'} {new Date(sg.validTo).toLocaleDateString()}. </>}
                   {sg.reason && <>Reason: {sg.reason}. </>}
@@ -405,7 +405,7 @@ function SignSection({ doc, guard, busy, onClose }: Common) {
         </>
       )}
       <h3>Certificate signature</h3>
-      <p className="hint">Applies a cryptographic digital signature using your own certificate (.p12 / .pfx). Viewers such as Acrobat will show whether the file changed after signing. The signed copy is downloaded; your open document is unchanged.</p>
+      <p className="hint">Applies a cryptographic digital signature using your own certificate (.p12 / .pfx). Other PDF viewers will show whether the file changed after signing. The signed copy is downloaded; your open document is unchanged.</p>
       <label>Certificate file
         <input type="file" accept=".p12,.pfx" onChange={(e) => { const f = e.target.files?.[0] ?? null; setFile(f); setCert(null) }} />
       </label>
@@ -574,7 +574,7 @@ function ConvertSection({ doc, base, guard, busy, onClose }: { doc?: Doc; base: 
     <>
       <h3>Export &amp; convert</h3>
       <div className="stack">
-        {doc && mk('Word document (.docx)', 'Text, headings and paragraphs. Layout, tables and images are not reproduced.', async () => {
+        {doc && mk('Document (.docx)', 'Text, headings and paragraphs. Layout, tables and images are not reproduced.', async () => {
           const bytes = await st.run(() => call('exportDocx', { id: doc.id }))
           if (bytes) await download(`${base}.docx`, bytes)
         })}

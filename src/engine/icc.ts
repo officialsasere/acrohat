@@ -51,7 +51,7 @@ function descTag(s: string): Uint8Array {
 export function srgbIccProfile(): Uint8Array {
   const trc = curveTag()
   const tags: [string, Uint8Array][] = [
-    ['desc', descTag('sRGB IEC61966-2.1 (Acrohat)')],
+    ['desc', descTag('sRGB IEC61966-2.1 (Kwiiva Paper)')],
     ['cprt', textTag('Public domain')],
     ['wtpt', xyzTag(0.9642, 1.0, 0.8249)],
     ['rXYZ', xyzTag(0.4360, 0.2225, 0.0139)],

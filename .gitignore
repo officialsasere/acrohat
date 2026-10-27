@@ -9,6 +9,8 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-paper
+dist-write
 dist-ssr
 *.local
 
@@ -28,3 +30,5 @@ src-tauri/gen
 test-results
 playwright-report
 e2e/shots
+src-tauri-write/target
+src-tauri-write/gen

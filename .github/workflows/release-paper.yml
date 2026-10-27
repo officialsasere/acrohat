@@ -1,0 +1,16 @@
+name: Release Kwiiva Paper
+# Run it from the Actions tab ("Release Kwiiva Paper" → "Run workflow"), or push a tag such as paper-v0.1.0.
+on:
+  push:
+    tags: ['paper-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/desktop-release.yml
+    with: { app: paper, title: Kwiiva Paper, dir: src-tauri, prefix: KwiivaPaper }
+    permissions:
+      contents: write

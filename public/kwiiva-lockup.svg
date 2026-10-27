@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="810" height="256" viewBox="0 0 810 256">
+  <svg x="28" y="28" width="200" height="200" viewBox="0 0 1024 1024"><defs><linearGradient id="lkbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9925b"/><stop offset=".6" stop-color="#8f5a33"/><stop offset="1" stop-color="#4e2e19"/></linearGradient></defs>
+  <rect width="1024" height="1024" rx="232" fill="url(#lkbg)"/><path d="M0 232C0 104 104 0 232 0h560c-210 40-470 150-792 420z" fill="#fff" opacity=".18"/>
+  <g fill="none" stroke="#fff8ec" stroke-width="81.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M362.0 235.0V790.0"/>
+    <path d="M362.0 597.6L576.6 349.7"/>
+    <path d="M473.0 468.1L695.0 790.0"/>
+  </g>
+  <circle cx="695.0" cy="198.0" r="73.3" fill="#f6d28b"/></svg><g transform="translate(264 180) scale(0.9)"><g fill="none" stroke="#2b1d14" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(0 0)" d="M0 -150V0M85 -150L0 -52M30 -87L90 0"/><path transform="translate(128 0)" d="M0 -100L35 0L70 -100L105 0L140 -100"/><path transform="translate(306 0)" d="M0 -100V0"/><circle transform="translate(306 0)" cx="0" cy="-142" r="15.84" fill="#d49a4a" stroke="none"/><path transform="translate(344 0)" d="M0 -100V0"/><circle transform="translate(344 0)" cx="0" cy="-142" r="15.84" fill="#d49a4a" stroke="none"/><path transform="translate(382 0)" d="M0 -100L40 0L80 -100"/><path transform="translate(500 0)" d="M37 -88A38 38 0 1 0 37 -12A38 38 0 1 0 37 -88ZM75 -100V0"/></g></g>
+</svg>

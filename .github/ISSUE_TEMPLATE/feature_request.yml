@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest something new or an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What are you trying to do?
+      description: Describe the task, not the solution. What is hard or impossible today?
+    validations: { required: true }
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: Optional. How would you like it to work?
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Want to build it?
+      options:
+        - label: I would like to work on this (a maintainer will help you get started)

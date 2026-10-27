@@ -14,7 +14,7 @@ export interface Issue {
 }
 
 export interface PdfAReport {
-  /** True when none of Acrohat's checks found an error. This is not an official certification. */
+  /** True when none of Kwiiva Paper's checks found an error. This is not an official certification. */
   passesChecks: boolean
   issues: Issue[]
 }
@@ -151,13 +151,13 @@ export function buildXmp(o: { title: string; author: string; keywords: string; c
    <dc:title><rdf:Alt><rdf:li xml:lang="x-default">${xmlEsc(o.title)}</rdf:li></rdf:Alt></dc:title>${o.author ? `\n   <dc:creator><rdf:Seq><rdf:li>${xmlEsc(o.author)}</rdf:li></rdf:Seq></dc:creator>` : ''}
   </rdf:Description>
   <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/">
-   <xmp:CreatorTool>Acrohat</xmp:CreatorTool>
+   <xmp:CreatorTool>Kwiiva Paper</xmp:CreatorTool>
    <xmp:CreateDate>${iso(o.created)}</xmp:CreateDate>
    <xmp:ModifyDate>${iso(o.modified)}</xmp:ModifyDate>
    <xmp:MetadataDate>${iso(o.modified)}</xmp:MetadataDate>
   </rdf:Description>
   <rdf:Description rdf:about="" xmlns:pdf="http://ns.adobe.com/pdf/1.3/">
-   <pdf:Producer>Acrohat</pdf:Producer>${o.keywords ? `\n   <pdf:Keywords>${xmlEsc(o.keywords)}</pdf:Keywords>` : ''}
+   <pdf:Producer>Kwiiva Paper</pdf:Producer>${o.keywords ? `\n   <pdf:Keywords>${xmlEsc(o.keywords)}</pdf:Keywords>` : ''}
   </rdf:Description>
  </rdf:RDF>
 </x:xmpmeta>
@@ -280,8 +280,8 @@ export async function makePdfA(bytes: Uint8Array): Promise<{ bytes: Uint8Array; 
   const keywords = doc.getKeywords() ?? ''
   doc.setCreationDate(created)
   doc.setModificationDate(modified)
-  doc.setProducer('Acrohat')
-  doc.setCreator('Acrohat')
+  doc.setProducer('Kwiiva Paper')
+  doc.setCreator('Kwiiva Paper')
   if (!title) doc.setTitle('Untitled')
   const xmp = buildXmp({ title: doc.getTitle() ?? 'Untitled', author, keywords, created, modified, part: 2, conformance: 'B' })
   const meta = ctx.stream(new TextEncoder().encode(xmp), { Type: 'Metadata', Subtype: 'XML' })

@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "acrohat"
+name = "kwiiva-paper"
 version = "0.1.0"
 dependencies = [
  "serde",

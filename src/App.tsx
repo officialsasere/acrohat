@@ -7,11 +7,13 @@ import { SearchBar } from './components/SearchBar'
 import { SignatureBar } from './components/SignatureBar'
 import { OverflowDialog } from './components/OverflowDialog'
 import { SignatureDialog, SplitDialog } from './components/Dialogs'
-import { ToolsDialog } from './components/ToolsDialog'
+import { ToolsDialog, type Section } from './components/ToolsDialog'
+import { LeftRail, ToolsPane } from './components/ToolsPane'
 import { Icon } from './components/Icons'
 import { call } from './engine/client'
 import { openFileList, openFiles, openPending, printActive, saveActive } from './lib/files'
 import { isTauri } from './lib/platform'
+import { isUsageEnabled, reportLaunch, setUsageEnabled } from '../shared/usage'
 
 export default function App() {
   const docs = useStore((s) => s.docs)
@@ -19,7 +21,9 @@ export default function App() {
   const sidebar = useStore((s) => s.sidebar)
   const toasts = useStore((s) => s.toasts)
   const theme = useStore((s) => s.theme)
+  const toolsPane = useStore((s) => s.toolsPane)
   const [dialog, setDialog] = useState<'sig' | 'split' | 'tools' | 'tools-sign' | null>(null)
+  const [section, setSection] = useState<Section | undefined>()
   const [dropping, setDropping] = useState(false)
   const active = docs.find((d) => d.id === activeId)
 
@@ -30,8 +34,10 @@ export default function App() {
   }, [theme])
 
   useEffect(() => {
-    document.title = active ? `${active.dirty ? '• ' : ''}${active.name} — Acrohat` : 'Acrohat'
+    document.title = active ? `${active.dirty ? '• ' : ''}${active.name} — Kwiiva Paper` : 'Kwiiva Paper'
   }, [active?.name, active?.dirty, active])
+
+  useEffect(() => { void reportLaunch('paper') }, [])
 
   // Desktop: files opened from the OS (double-click, "Open with").
   useEffect(() => {
@@ -41,6 +47,12 @@ export default function App() {
     import('@tauri-apps/api/event').then(({ listen }) => listen('open-files', openPending)).then((u) => (off = u))
     return () => off?.()
   }, [])
+
+  // On a phone the page list is a drawer: close it once a page has been chosen.
+  const pendingScroll = useStore((s) => s.pendingScroll)
+  useEffect(() => {
+    if (pendingScroll !== null && window.matchMedia('(max-width: 720px)').matches) useStore.setState({ sidebar: false })
+  }, [pendingScroll])
 
   // Warn before losing unsaved work.
   useEffect(() => {
@@ -87,7 +99,7 @@ export default function App() {
       onDrop={(e) => { e.preventDefault(); setDropping(false); openFileList(e.dataTransfer.files) }}
     >
       <header className="titlebar">
-        <div className="brand"><Icon name="file" size={20} /> Acrohat</div>
+        <div className="brand"><img src={`${import.meta.env.BASE_URL}paper.svg`} alt="" /> Kwiiva Paper</div>
         <nav className="tabs-bar" aria-label="Open documents">
           {docs.map((d) => (
             <div key={d.id} className={'tab' + (d.id === activeId ? ' active' : '')} onClick={() => useStore.getState().activate(d.id)} title={d.name}>
@@ -99,18 +111,21 @@ export default function App() {
       </header>
       <Toolbar onSignature={() => setDialog('sig')} onSplit={() => setDialog('split')} onTools={() => setDialog('tools')} />
       <SearchBar />
-      <SignatureBar onDetails={() => setDialog('tools-sign')} />
+      <SignatureBar onDetails={() => { setSection('sign'); setDialog('tools-sign') }} />
       <main className="main">
+        {active && <LeftRail onSignatures={() => { setSection('sign'); setDialog('tools-sign') }} />}
         {active && sidebar && <Sidebar />}
         {active ? <Viewer /> : <Welcome />}
+        {toolsPane && <ToolsPane onSection={(s) => { setSection(s); setDialog('tools-sign') }} onSignature={() => setDialog('sig')} />}
       </main>
+      {((active && sidebar) || toolsPane) && <div className="sidebar-backdrop" onClick={() => useStore.setState({ sidebar: false, toolsPane: false })} />}
       {active && <footer className="statusbar"><PageNumber /> <span>{active.name}</span></footer>}
       {dropping && <div className="drop-hint">Drop PDF files to open</div>}
       {dialog === 'sig' && <SignatureDialog onClose={() => setDialog(null)} />}
       {dialog === 'split' && active && <SplitDialog onClose={() => setDialog(null)} />}
       <OverflowDialog />
       {dialog === 'tools' && <ToolsDialog onClose={() => setDialog(null)} />}
-      {dialog === 'tools-sign' && <ToolsDialog initial="sign" onClose={() => setDialog(null)} />}
+      {dialog === 'tools-sign' && <ToolsDialog initial={section} onClose={() => setDialog(null)} />}
       <div className="toasts" role="status" aria-live="polite">
         {toasts.map((t) => (
           <div key={t.id} className={'toast ' + t.kind} onClick={() => useStore.getState().dismissToast(t.id)}>{t.text}</div>
@@ -139,16 +154,27 @@ function PageNumber() {
   )
 }
 
+function UsageSwitch() {
+  const [on, setOn] = useState(isUsageEnabled())
+  return (
+    <p className="hint" style={{ maxWidth: 520 }}>
+      Kwiiva counts app launches anonymously (no files, no ID, no address kept) so the website can show real usage.{' '}
+      <button className="link-btn" onClick={() => { setUsageEnabled(!on); setOn(!on) }}>{on ? 'Turn off' : 'Turn on'}</button>
+    </p>
+  )
+}
+
 function Welcome() {
   return (
     <div className="welcome">
-      <Icon name="file" size={56} />
-      <h1>Acrohat</h1>
+      <img className="logo" src={`${import.meta.env.BASE_URL}paper.svg`} alt="" />
+      <h1>Kwiiva Paper</h1>
       <p>Edit, convert and sign PDFs. Free and open source. Your files never leave your computer.</p>
       <div className="cta">
         <button className="primary big" onClick={openFiles}>Open a PDF</button>
       </div>
       <p className="hint">or drop a file anywhere in this window</p>
+      <UsageSwitch />
     </div>
   )
 }

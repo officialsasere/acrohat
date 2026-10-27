@@ -1,0 +1,16 @@
+{
+  "name": "Kwiiva Write",
+  "short_name": "Write",
+  "description": "Write documents. Free and open source. Your files never leave your device.",
+  "start_url": "/write/app/",
+  "scope": "/write/",
+  "display": "standalone",
+  "background_color": "#fbf6ee",
+  "theme_color": "#8a5a36",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "/write-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/write-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/write-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

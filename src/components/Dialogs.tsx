@@ -62,7 +62,7 @@ export function SignatureDialog({ onClose }: { onClose: () => void }) {
     out.height = y1 - y0 + 8
     out.getContext('2d')!.drawImage(c, x0 - 4, y0 - 4, out.width, out.height, 0, 0, out.width, out.height)
     const url = out.toDataURL('image/png')
-    try { localStorage.setItem('acrohat.signature', url) } catch { /* private mode: keep it for this session only */ }
+    try { localStorage.setItem('kwiiva-paper.signature', url) } catch { /* private mode: keep it for this session only */ }
     useStore.setState({ signature: url, tool: 'sign' })
     onClose()
   }
@@ -92,7 +92,7 @@ export function SignatureDialog({ onClose }: { onClose: () => void }) {
       <p className="hint">Stored only in this browser. Click or drag on a page with the Sign tool to place it. This is a visual signature, not a certificate-based digital signature.</p>
       <div className="actions">
         <button onClick={() => { const c = canvas.current; c?.getContext('2d')?.clearRect(0, 0, c.width, c.height); dirty.current = false }}>Clear</button>
-        {useStore.getState().signature && <button onClick={() => { localStorage.removeItem('acrohat.signature'); useStore.setState({ signature: null }); onClose() }}>Delete saved</button>}
+        {useStore.getState().signature && <button onClick={() => { localStorage.removeItem('kwiiva-paper.signature'); useStore.setState({ signature: null }); onClose() }}>Delete saved</button>}
         <span className="spacer" />
         <button onClick={onClose}>Cancel</button>
         <button className="primary" onClick={save}>Use signature</button>

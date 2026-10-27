@@ -1,6 +1,6 @@
 # Third-party software
 
-Acrohat is MIT licensed. It bundles the following components, all under licenses that allow redistribution.
+Kwiiva (Paper and Write) is MIT licensed. It bundles the following components, all under licenses that allow redistribution.
 
 | Component | Used for | License |
 |---|---|---|
@@ -13,5 +13,8 @@ Acrohat is MIT licensed. It bundles the following components, all under licenses
 | [DejaVu fonts](https://dejavu-fonts.github.io/) | Replacement fonts with wider symbol coverage | Bitstream Vera / Public Domain (`public/fonts/LICENSE-DejaVu.txt`) |
 | [React](https://react.dev), [Zustand](https://github.com/pmndrs/zustand), [fflate](https://github.com/101arrowz/fflate) | Interface, state, ZIP files | MIT |
 | [Tauri](https://tauri.app) | Desktop shell | MIT / Apache-2.0 |
+| [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) | Kwiiva Write text editor | MIT |
+| [Carlito](https://fonts.google.com/specimen/Carlito) and [Caladea](https://fonts.google.com/specimen/Caladea) via @fontsource | Kwiiva Write fonts that match the widths of common office fonts | SIL OFL 1.1 |
+| [@netlify/blobs](https://github.com/netlify/primitives) | Download and launch counters (website only) | MIT |
 
 MuPDF and other AGPL/GPL PDF engines are deliberately **not** used, so the whole app can be reused under MIT terms.

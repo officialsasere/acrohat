@@ -1,0 +1,82 @@
+name: Desktop release (reusable)
+# Builds one Kwiiva app's installers for Windows, macOS and Linux and publishes them under FIXED file names, so the
+# website can link straight to them. Two releases are written:
+#   <app>-v<version>   the versioned release (kept forever)
+#   <app>-latest       a rolling release whose files are replaced each time; the website's Download buttons use it
+# Called by release-paper.yml and release-write.yml. A new app only needs its own tiny caller file.
+on:
+  workflow_call:
+    inputs:
+      app: { description: 'Short name used in tags, e.g. paper', type: string, required: true }
+      title: { description: 'Product name, e.g. Kwiiva Paper', type: string, required: true }
+      dir: { description: 'Folder with the app tauri.conf.json, e.g. src-tauri', type: string, required: true }
+      prefix: { description: 'Installer file name prefix, e.g. KwiivaPaper', type: string, required: true }
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-latest, args: '--target aarch64-apple-darwin' }
+          - { os: macos-latest, args: '--target x86_64-apple-darwin' }
+          - { os: ubuntu-22.04, args: '' }
+          - { os: windows-latest, args: '' }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: swatinem/rust-cache@v2
+        with: { workspaces: '${{ inputs.dir }}' }
+      - name: Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - run: npm ci
+      - name: Build the installers
+        working-directory: ${{ inputs.dir }}
+        run: npx tauri build ${{ matrix.args }}
+      - name: Publish under fixed names
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP: ${{ inputs.app }}
+          TITLE: ${{ inputs.title }}
+          DIR: ${{ inputs.dir }}
+          PREFIX: ${{ inputs.prefix }}
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./$DIR/tauri.conf.json').version")"
+          if [ "${{ github.ref_type }}" = "tag" ]; then TAG="${{ github.ref_name }}"; else TAG="$APP-v$VERSION"; fi
+          NOTES="Download the installer for your system. The installers are not code-signed yet, so macOS and Windows warn the first time; the website explains the two-click workaround."
+          # Four jobs run at once, so creating a release may race: whoever loses just carries on.
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --target "${{ github.sha }}" --title "$TITLE v$VERSION" --notes "$NOTES" || true
+          gh release view "$APP-latest" >/dev/null 2>&1 || gh release create "$APP-latest" --target "${{ github.sha }}" --latest=false --title "$TITLE v$VERSION" --notes "The newest $TITLE installers. Always the same file names; the website links here." || true
+          sleep 5
+          found=0
+          while IFS= read -r -d '' f; do
+            case "$f" in
+              *aarch64*.dmg)           name="$PREFIX-macOS-AppleSilicon.dmg" ;;
+              *x64*.dmg|*x86_64*.dmg)  name="$PREFIX-macOS-Intel.dmg" ;;
+              *.msi)                   name="$PREFIX-Windows.msi" ;;
+              *-setup.exe)             name="$PREFIX-Windows-Setup.exe" ;;
+              *.AppImage)              name="$PREFIX-Linux.AppImage" ;;
+              *.deb)                   name="$PREFIX-Linux.deb" ;;
+              *) continue ;;
+            esac
+            cp "$f" "$RUNNER_TEMP/$name"
+            gh release upload "$TAG" "$RUNNER_TEMP/$name" --clobber </dev/null
+            gh release upload "$APP-latest" "$RUNNER_TEMP/$name" --clobber </dev/null
+            echo "uploaded $name"
+            found=$((found + 1))
+          done < <(find "$DIR/target" -path '*/release/bundle/*' -type f \( -name '*.dmg' -o -name '*.msi' -o -name '*-setup.exe' -o -name '*.AppImage' -o -name '*.deb' \) -print0)
+          if [ "$found" -eq 0 ]; then echo "No installers were produced"; exit 1; fi
+          gh release edit "$APP-latest" --title "$TITLE v$VERSION" --latest=false || true

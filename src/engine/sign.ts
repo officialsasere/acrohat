@@ -72,7 +72,7 @@ export async function signWithCertificate(bytes: Uint8Array, p12: Uint8Array, pa
     location: opts.location || '',
     signingTime: new Date(),
     widgetRect: opts.rect ?? [0, 0, 0, 0],
-    appName: 'Acrohat',
+    appName: 'Kwiiva Paper',
     signatureLength: 16384,
   })
   // signpdf needs a classic cross-reference table, not object streams.

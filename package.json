@@ -14,8 +14,8 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "check": "npm run typecheck && oxlint && npm test",
-    "build:paper": "tsc -b && KWIIVA_APP=paper vite build && node scripts/prune-dist.mjs paper",
-    "build:write": "tsc -b && KWIIVA_APP=write vite build && node scripts/prune-dist.mjs write",
+    "build:paper": "tsc -b && cross-env KWIIVA_APP=paper vite build && node scripts/prune-dist.mjs paper",
+    "build:write": "tsc -b && cross-env KWIIVA_APP=write vite build && node scripts/prune-dist.mjs write",
     "prebuild:paper": "node scripts/copy-ocr-assets.mjs"
   },
   "dependencies": {
@@ -65,6 +65,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "cross-env": "^10.1.0",
     "happy-dom": "^21.0.4",
     "oxlint": "^1.88.0",
     "pngjs": "^7.0.0",

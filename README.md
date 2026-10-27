@@ -119,19 +119,19 @@ The website shows how much Kwiiva is used. To make that possible:
 
 ## Contributing
 
-Kwiiva is open source and made to be easy to join: read [CONTRIBUTING.md](CONTRIBUTING.md) (set up in 10 minutes, `npm run check` before a pull request), pick an issue labelled **good first issue**, or just report a PDF that comes out wrong. Everyone is welcome under our [Code of Conduct](CODE_OF_CONDUCT.md). See the [changelog](CHANGELOG.md) for what changed.
+Kwiiva is open source and made to be easy to join: read [CONTRIBUTING.md](CONTRIBUTING.md) (set up in 10 minutes, `yarn verify` before a pull request), pick an issue labelled **good first issue**, or just report a PDF that comes out wrong. Everyone is welcome under our [Code of Conduct](CODE_OF_CONDUCT.md). See the [changelog](CHANGELOG.md) for what changed.
 
 ## Build from source
 
 ```bash
 git clone https://github.com/officialsasere/kwiiva && cd kwiiva
-npm install
-npm run dev            # web app
-npm run tauri dev      # desktop app (needs Rust + Tauri prerequisites)
-npm run tauri build    # installers for your OS
+yarn install
+yarn dev            # web app
+yarn tauri dev      # desktop app (needs Rust + Tauri prerequisites)
+yarn tauri build    # installers for your OS
 ```
 
-Tests: `npm test` (engine), `npm run test:e2e` (browser). See [CONTRIBUTING.md](CONTRIBUTING.md).
+Tests: `yarn test` (engine), `yarn test:e2e` (browser). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## How it works
 
@@ -148,7 +148,7 @@ Text editing works on PDFium's page objects: group text runs into lines and para
 
 ## Hosting & releases (maintainers)
 
-- **Website and web app: Netlify.** Connect the GitHub repo in Netlify (Add new site → Import from Git). `netlify.toml` already sets the build command (`npm run build`), publish folder (`dist`) and Node version; no other settings are needed. The Kwiiva home page is served at `/`, the Kwiiva Paper page at `/paper/` and the editor at `/paper/app/`. Every push to `main` redeploys.
+- **Website and web app: Netlify.** Connect the GitHub repo in Netlify (Add new site → Import from Git). `netlify.toml` already sets the build command (`yarn build`), publish folder (`dist`) and Node version; no other settings are needed. The Kwiiva home page is served at `/`, the Kwiiva Paper page at `/paper/` and the editor at `/paper/app/`. Every push to `main` redeploys.
 - **Installers: GitHub Releases.** Actions → **Release** → **Run workflow** (or push a tag like `v0.1.0`) builds macOS (Apple silicon + Intel), Windows and Linux installers and publishes them under fixed names, so the website's Download button links straight to them.
 - CI (`.github/workflows/ci.yml`) runs the type check, lint, unit tests and browser tests on every push and pull request.
 - Package managers (Homebrew tap, winget, Flathub) are free; see [docs/PACKAGING.md](docs/PACKAGING.md).

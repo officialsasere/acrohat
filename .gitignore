@@ -32,3 +32,4 @@ playwright-report
 e2e/shots
 src-tauri-write/target
 src-tauri-write/gen
+package-lock.json

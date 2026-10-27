@@ -6,8 +6,8 @@
   "build": {
     "frontendDist": "../dist-write",
     "devUrl": "http://localhost:5173/write/app/",
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build:write"
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build:write"
   },
   "app": {
     "windows": [

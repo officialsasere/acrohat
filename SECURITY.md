@@ -10,4 +10,4 @@ PDF files are a common way to deliver malware, so Kwiiva Paper treats every file
 Found a vulnerability? Please report it privately through GitHub's "Report a vulnerability" button on the Security tab rather than opening a public issue.
 
 ## Known dependency advisory
-`npm audit` reports a high-severity advisory in `node-forge` (RSA PKCS#1 v1.5 *signature verification*), pulled in by `@signpdf/signer-p12`. Kwiiva Paper only uses it to **create** signatures, never to verify them, so the affected code path is not reachable. We will switch libraries when a patched release is available.
+`yarn audit` reports a high-severity advisory in `node-forge` (RSA PKCS#1 v1.5 *signature verification*), pulled in by `@signpdf/signer-p12`. Kwiiva Paper only uses it to **create** signatures, never to verify them, so the affected code path is not reachable. We will switch libraries when a patched release is available.

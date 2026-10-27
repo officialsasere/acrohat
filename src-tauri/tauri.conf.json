@@ -6,8 +6,8 @@
   "build": {
     "frontendDist": "../dist-paper",
     "devUrl": "http://localhost:5173/paper/app/",
-    "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build:paper"
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build:paper"
   },
   "app": {
     "windows": [

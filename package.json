@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
-    "check": "npm run typecheck && oxlint && npm test",
+    "verify": "yarn typecheck && oxlint && yarn test",
     "build:paper": "tsc -b && cross-env KWIIVA_APP=paper vite build && node scripts/prune-dist.mjs paper",
     "build:write": "tsc -b && cross-env KWIIVA_APP=write vite build && node scripts/prune-dist.mjs write",
     "prebuild:paper": "node scripts/copy-ocr-assets.mjs"

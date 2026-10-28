@@ -11,6 +11,8 @@ import { startEdit } from './editor/textEdit'
 
 const S = () => useStore.getState()
 let pasteSeen = false
+/** Stands in for the text of a copy that holds only objects (an invisible character). */
+const OBJECTS = '\u200b'
 const typing = (t: EventTarget | null) => { const el = t as HTMLElement | null; return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable || !!el.closest?.('.pm')) }
 
 /** Shortcuts, copy and paste, and files dropped on the window. */
@@ -35,7 +37,7 @@ export function useGlobalInput() {
       if (k === 'y' && !(e.target as HTMLElement).closest?.('.pm')) { e.preventDefault(); s.redo(); return }
       if (typing(e.target)) return
       // Some browsers send no copy or paste event when the system clipboard is empty, so objects are also handled from the keys.
-      if (k === 'c' && s.sel.length && !document.activeElement?.closest('.slide-panel')) copySel()
+      if (k === 'c' && s.sel.length && !document.activeElement?.closest('.slide-panel')) { copySel(); void navigator.clipboard?.writeText(OBJECTS).catch(() => undefined) }
       else if (k === 'v' && s.clip?.length && !document.activeElement?.closest('.slide-panel')) { pasteSeen = false; setTimeout(() => { if (!pasteSeen) pasteEls() }, 120) }
       if (k === 'a') { e.preventDefault(); selectAll() }
       else if (k === 'd') { e.preventDefault(); duplicateSel() }
@@ -50,7 +52,8 @@ export function useGlobalInput() {
       e.preventDefault()
       copySel()
       const t = s.deck.slides.find((x) => x.id === s.cur)?.els.filter((x) => s.sel.includes(x.id)).map((x) => (x.type === 'shape' ? textOf(x.text) : '')).filter(Boolean).join('\n')
-      if (t) e.clipboardData?.setData('text/plain', t)
+      // Always put something on the system clipboard, so a later paste is not fooled by whatever was copied before.
+      e.clipboardData?.setData('text/plain', t || OBJECTS)
       if (cut) cutSel2()
     }
     const cutSel2 = () => deleteSel()
@@ -64,7 +67,7 @@ export function useGlobalInput() {
       if (files.length) { e.preventDefault(); void insertImageFiles(files); return }
       const t = e.clipboardData?.getData('text/plain')
       const internalText = (s.clip ?? []).filter((x) => x.type === 'shape').map((x) => textOf((x as import('./model').ShapeEl).text)).filter(Boolean).join('\n')
-      if (s.clip?.length && (!t?.trim() || t.trim() === internalText.trim())) { e.preventDefault(); pasteEls(); return }
+      if (s.clip?.length && (!t || t === OBJECTS || t.trim() === internalText.trim())) { e.preventDefault(); pasteEls(); return }
       if (t?.trim()) {
         e.preventDefault()
         const box = newTextBox(120, 120, 600, 80)

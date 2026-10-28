@@ -217,8 +217,9 @@ test('group, duplicate and delete with the keyboard', async ({ page }) => {
   expect(s.els.filter((e) => e.type === 'group')).toHaveLength(0)
 })
 
-test('copy and paste an object', async ({ page }) => {
+test('copy and paste an object, even when the clipboard held other text before', async ({ page }) => {
   await blank(page)
+  await page.evaluate(() => navigator.clipboard.writeText('stale text from somewhere else'))
   await page.getByRole('button', { name: 'Shapes' }).click()
   await page.getByRole('button', { name: 'Star', exact: false }).first().click()
   const a = await toPage(page, 100, 300), b = await toPage(page, 200, 400)

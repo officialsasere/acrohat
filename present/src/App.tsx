@@ -14,7 +14,8 @@ import { Show } from './show/Show'
 import { Audience } from './show/Audience'
 import { PrintRoot } from './lib/print'
 import { useGlobalInput } from './hooks'
-import { openBytes, save } from './lib/files'
+import { autosaver, openBytes, save } from './lib/files'
+import { autosaveOn } from '../../shared/autosave'
 import { putDraft } from './lib/storage'
 import { startShow } from './show/start'
 import { reportLaunch } from '../../shared/usage'
@@ -51,6 +52,7 @@ function Editor() {
   useEffect(() => {
     if (screen !== 'edit' || deck === last.current) { last.current = deck; return }
     last.current = deck
+    autosaver.poke()
     clearTimeout(timer.current)
     timer.current = window.setTimeout(() => {
       const s = useStore.getState()
@@ -91,7 +93,7 @@ function Editor() {
           <input className="title-input" aria-label="Presentation name" value={file.name} onChange={(e) => useStore.setState((s) => ({ file: { ...s.file, name: e.target.value, dirty: true } }))} />
           <div className="only-desktop" style={{ display: 'flex', alignItems: 'center' }}>
             <MenuBar />
-            <span className="save-state">{file.dirty ? 'Kept in this browser. Use File → Save to make a file.' : 'All changes kept'}</span>
+            <span className="save-state">{file.path || file.handle ? (autosaveOn() ? (file.dirty ? 'Saving to the file…' : 'All changes saved to the file') : file.dirty ? 'Unsaved changes. Use File → Save' : 'Saved') : file.dirty ? 'Kept in this browser. Save once to choose a file; after that it saves by itself.' : 'All changes kept'}</span>
           </div>
         </div>
         <button type="button" title="Home" aria-label="Home" onClick={() => useStore.setState({ screen: 'home' })}><Icon name="home" /></button>

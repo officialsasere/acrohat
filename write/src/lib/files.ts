@@ -1,4 +1,5 @@
 import { errText, nativeRead, nativeWrite } from '../../../shared/native'
+import { handleWritable, makeAutosaver } from '../../../shared/autosave'
 import { isTauri } from '../../../src/lib/platform'
 import { readDocx } from '../formats/docxRead'
 import { writeDocx } from '../formats/docxWrite'
@@ -135,16 +136,21 @@ function download(name: string, bytes: Uint8Array, mime: string) {
 }
 
 /** Saves the document. `saveAs` (or a document with no file yet) asks where to put it. */
-export async function save(opts: { saveAs?: boolean; kind?: FileKind } = {}) {
+export async function save(opts: { saveAs?: boolean; kind?: FileKind; silent?: boolean } = {}) {
   const s = useStore.getState()
   if (!s.editor) return
+  // Automatic saving only updates the file this document already has; it never asks where to put one.
+  if (opts.silent && (!s.doc.dirty || opts.kind || opts.saveAs || !(s.doc.path || s.doc.handle) || (s.doc.handle && !(await handleWritable(s.doc.handle))))) return
   const kind: FileKind = opts.kind ?? s.doc.kind ?? 'docx'
   const name = (s.doc.fileName && !opts.kind ? s.doc.fileName : `${s.doc.title.replace(/[\\/:*?"<>|]+/g, '') || 'Document'}.${KINDS[kind].ext}`).replace(/\.[^.]+$/, '') + '.' + KINDS[kind].ext
   const bytes = encode(kind)
   const w = window as Picker
+  const snapshot = s.editor.state.doc
   const done = (fileName: string, extra: Partial<{ handle: FileSystemFileHandle; path: string }> = {}) => {
-    useStore.setState((st) => ({ doc: { ...st.doc, fileName, kind, dirty: false, handle: extra.handle, path: extra.path } }))
-    s.toast('success', `Saved ${fileName}`)
+    // Typing that happened while the file was being written is not saved yet, so the document stays marked as changed.
+    const stale = !!opts.silent && useStore.getState().editor?.state.doc !== snapshot
+    useStore.setState((st) => ({ doc: { ...st.doc, fileName, kind, dirty: stale, handle: extra.handle, path: extra.path } }))
+    if (!opts.silent) s.toast('success', `Saved ${fileName}`)
   }
   try {
     if (isTauri) {
@@ -166,7 +172,7 @@ export async function save(opts: { saveAs?: boolean; kind?: FileKind } = {}) {
     download(name, bytes, KINDS[kind].mime)
     done(name)
   } catch (e) {
-    if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${errText(e)}`)
+    if ((e as Error).name !== 'AbortError') s.toast('error', opts.silent ? `Automatic save failed: ${errText(e)}` : `Could not save: ${errText(e)}`)
   }
 }
 
@@ -181,3 +187,5 @@ export function printDoc() {
 }
 
 export { putDraft, wordCount }
+
+export const autosaver = makeAutosaver(() => save({ silent: true }))

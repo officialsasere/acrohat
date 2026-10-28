@@ -5,7 +5,8 @@ import { layoutFor, paperCssVars } from './editor/pageStyle'
 import { pageInfo } from './editor/pagination'
 import { dialog, ed, goHome, newBlank, openFile, printDoc, save, toggleFind } from './editor/actions'
 import { pagePx } from './formats/types'
-import { openBytes, putDraft, wordCount } from './lib/files'
+import { autosaver, openBytes, putDraft, wordCount } from './lib/files'
+import { autosaveOn } from '../../shared/autosave'
 import { listDrafts } from './lib/storage'
 import { reportLaunch } from '../../shared/usage'
 import { isTauri } from '../../src/lib/platform'
@@ -64,6 +65,7 @@ export default function App() {
   // Drafts: saved in this browser a moment after you stop typing.
   const timer = useRef(0)
   function scheduleDraft() {
+    autosaver.poke()
     clearTimeout(timer.current)
     timer.current = window.setTimeout(() => {
       const s = useStore.getState()
@@ -172,7 +174,7 @@ export default function App() {
           <input className="title-input" aria-label="Document name" value={doc.title} onChange={(e) => useStore.setState((s) => ({ doc: { ...s.doc, title: e.target.value, dirty: true } }))} />
           <div className="only-desktop" style={{ display: 'flex', alignItems: 'center' }}>
             <MenuBar />
-            <span className="save-state">{doc.fileName ? (doc.dirty ? `Unsaved changes to ${doc.fileName}` : `Saved as ${doc.fileName}`) : 'Kept in this browser; use File → Save to make a file'}</span>
+            <span className="save-state">{doc.fileName && (doc.path || doc.handle) ? (autosaveOn() ? (doc.dirty ? `Saving ${doc.fileName}…` : `All changes saved to ${doc.fileName}`) : doc.dirty ? `Unsaved changes to ${doc.fileName}` : `Saved as ${doc.fileName}`) : 'Kept in this browser. Save once to choose a file; after that it saves by itself.'}</span>
           </div>
         </div>
         <button type="button" title="Home" aria-label="Home" onClick={goHome}><Icon name="home" /></button>

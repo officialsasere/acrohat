@@ -294,3 +294,20 @@ test('nothing in the app mentions other products', async ({ page }) => {
   await blank(page)
   await expect(page.locator('body')).not.toContainText(/microsoft|google|excel|\bsheets\b(?! )/i)
 })
+
+test('changes are saved to the file by themselves once it has been saved', async ({ page }) => {
+  await page.addInitScript(() => {
+    const w = window as never as Record<string, unknown>
+    w.__writes = [] as number[]
+    w.showSaveFilePicker = async () => { let chunk = 0; return { name: 'auto.xlsx', queryPermission: async () => 'granted', createWritable: async () => ({ write: async (b: Uint8Array) => { chunk = b.length }, close: async () => { (w.__writes as number[]).push(chunk) } }) } }
+  })
+  await page.goto('/grid/app/')
+  await blank(page)
+  await typeAt(page, 0, 0, 'one')
+  await page.keyboard.press('ControlOrMeta+s')
+  const count = () => page.evaluate(() => (window as never as { __writes: number[] }).__writes.length)
+  await expect.poll(count).toBe(1)
+  await typeAt(page, 0, 1, 'two')
+  await expect.poll(count, { timeout: 10000 }).toBeGreaterThan(1)
+  await expect(page.locator('.save-state')).toContainText('All changes saved to the file')
+})

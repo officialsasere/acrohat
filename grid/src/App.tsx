@@ -8,13 +8,15 @@ import { MenuBar, MobileMenu } from './components/MenuBar'
 import { Toolbar } from './components/Toolbar'
 import { Icon } from './components/ui'
 import { gridApi } from './actions/nav'
-import { newBook, openBytes, openDraft, openFile, putDraft, listDrafts, deleteDraft, save, type Draft } from './lib/files'
+import { autosaver, newBook, openBytes, openDraft, openFile, putDraft, listDrafts, deleteDraft, save, type Draft } from './lib/files'
 import { TEMPLATES } from './templates'
 import { useBook } from './hooks'
 import { useStore } from './store'
 import { reportLaunch } from '../../shared/usage'
 import { isTauri } from '../../src/lib/platform'
 
+import { autosaveOn } from '../../shared/autosave'
+const saveStatus = (f: { path?: string; handle?: unknown; dirty: boolean; name: string }) => (f.path || f.handle ? (autosaveOn() ? (f.dirty ? 'Saving to the file…' : 'All changes saved to the file') : f.dirty ? 'Unsaved changes. Use File → Save' : 'Saved') : f.dirty ? 'Kept in this browser. Save once to choose a file; after that it saves by itself.' : 'All changes kept')
 const asset = (f: string) => `${import.meta.env.BASE_URL}${f}`
 
 function Home() {
@@ -76,6 +78,7 @@ export default function App() {
   useEffect(() => {
     if (screen !== 'edit' || book.version === lastVersion.current) { lastVersion.current = book.version; return }
     lastVersion.current = book.version
+    autosaver.poke()
     clearTimeout(timer.current)
     timer.current = window.setTimeout(() => {
       const s = useStore.getState()
@@ -136,7 +139,7 @@ export default function App() {
           <input className="title-input" aria-label="Spreadsheet name" value={file.name} onChange={(e) => useStore.setState((s) => ({ file: { ...s.file, name: e.target.value, dirty: true } }))} />
           <div className="only-desktop" style={{ display: 'flex', alignItems: 'center' }}>
             <MenuBar />
-            <span className="save-state">{file.dirty ? 'Kept in this browser. Use File → Save to make a file.' : 'All changes kept'}</span>
+            <span className="save-state">{saveStatus(file)}</span>
           </div>
         </div>
         <button type="button" title="Home" aria-label="Home" onClick={() => useStore.setState({ screen: 'home' })}><Icon name="home" /></button>

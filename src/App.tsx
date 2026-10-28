@@ -11,7 +11,7 @@ import { ToolsDialog, type Section } from './components/ToolsDialog'
 import { LeftRail, ToolsPane } from './components/ToolsPane'
 import { Icon } from './components/Icons'
 import { call } from './engine/client'
-import { openFileList, openFiles, openPending, printActive, saveActive } from './lib/files'
+import { autosaver, openFileList, openFiles, openPending, printActive, saveActive } from './lib/files'
 import { isTauri } from './lib/platform'
 import { isUsageEnabled, reportLaunch, setUsageEnabled } from '../shared/usage'
 
@@ -38,6 +38,7 @@ export default function App() {
   }, [active?.name, active?.dirty, active])
 
   useEffect(() => { void reportLaunch('paper') }, [])
+  useEffect(() => { if (docs.some((d) => d.dirty && (d.path || d.handle))) autosaver.poke() }, [docs])
 
   // Desktop: files opened from the OS (double-click, "Open with").
   useEffect(() => {

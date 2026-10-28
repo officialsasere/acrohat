@@ -1,5 +1,5 @@
 import { pagePx, type PageSettings } from '../formats/types'
-import { fontStack } from './fonts'
+import { fontStack } from '../../../shared/fonts'
 import type { LayoutConfig } from './pagination'
 import { PAGE_GAP } from './pagination'
 

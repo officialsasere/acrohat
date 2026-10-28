@@ -1,28 +1,4 @@
-@import '@fontsource/carlito/latin-400.css';
-@import '@fontsource/carlito/latin-400-italic.css';
-@import '@fontsource/carlito/latin-700.css';
-@import '@fontsource/carlito/latin-700-italic.css';
-@import '@fontsource/carlito/latin-ext-400.css';
-@import '@fontsource/carlito/latin-ext-700.css';
-@import '@fontsource/caladea/latin-400.css';
-@import '@fontsource/caladea/latin-400-italic.css';
-@import '@fontsource/caladea/latin-700.css';
-@import '@fontsource/caladea/latin-700-italic.css';
-
-@font-face { font-family: 'Liberation Sans'; src: url('/fonts/LiberationSans-Regular.ttf'); font-weight: 400; font-style: normal; }
-@font-face { font-family: 'Liberation Sans'; src: url('/fonts/LiberationSans-Bold.ttf'); font-weight: 700; font-style: normal; }
-@font-face { font-family: 'Liberation Sans'; src: url('/fonts/LiberationSans-Italic.ttf'); font-weight: 400; font-style: italic; }
-@font-face { font-family: 'Liberation Sans'; src: url('/fonts/LiberationSans-BoldItalic.ttf'); font-weight: 700; font-style: italic; }
-@font-face { font-family: 'Liberation Serif'; src: url('/fonts/LiberationSerif-Regular.ttf'); font-weight: 400; font-style: normal; }
-@font-face { font-family: 'Liberation Serif'; src: url('/fonts/LiberationSerif-Bold.ttf'); font-weight: 700; font-style: normal; }
-@font-face { font-family: 'Liberation Serif'; src: url('/fonts/LiberationSerif-Italic.ttf'); font-weight: 400; font-style: italic; }
-@font-face { font-family: 'Liberation Serif'; src: url('/fonts/LiberationSerif-BoldItalic.ttf'); font-weight: 700; font-style: italic; }
-@font-face { font-family: 'Liberation Mono'; src: url('/fonts/LiberationMono-Regular.ttf'); font-weight: 400; font-style: normal; }
-@font-face { font-family: 'Liberation Mono'; src: url('/fonts/LiberationMono-Bold.ttf'); font-weight: 700; font-style: normal; }
-@font-face { font-family: 'Liberation Mono'; src: url('/fonts/LiberationMono-Italic.ttf'); font-weight: 400; font-style: italic; }
-@font-face { font-family: 'Liberation Mono'; src: url('/fonts/LiberationMono-BoldItalic.ttf'); font-weight: 700; font-style: italic; }
-@font-face { font-family: 'DejaVu Sans'; src: url('/fonts/DejaVuSans.ttf'); font-weight: 400; }
-@font-face { font-family: 'DejaVu Sans'; src: url('/fonts/DejaVuSans-Bold.ttf'); font-weight: 700; }
+@import '../../shared/fonts.css';
 
 :root {
   --bg: #f6efe4; --panel: #fffaf2; --panel-2: #efe5d6; --text: #2b1d14; --muted: #7a6552; --border: #e0d2bd;

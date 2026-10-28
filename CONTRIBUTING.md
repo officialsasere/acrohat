@@ -27,7 +27,8 @@ Not sure where to start? Look for issues labelled **good first issue** or **help
 | `yarn test` | Unit tests for the PDF engine (Vitest, no browser) |
 | `yarn test:e2e` | Browser tests that drive the real UI (first time: `npx playwright install chromium`) |
 | `yarn build` | Production build of the whole site into `dist/` |
-| `yarn build:write` / `yarn build:paper` | Build one app only (what the desktop installers bundle) |
+| `yarn build:write` / `build:paper` / `build:grid` | Build one app only (what the desktop installers bundle) |
+| `yarn screenshots` | Retakes the README screenshots from the real apps |
 | `cd src-tauri-write && npx tauri dev` | Kwiiva Write desktop app (needs [Rust](https://rustup.rs) and the [Tauri prerequisites](https://tauri.app/start/prerequisites/)); use `src-tauri` for Kwiiva Paper |
 | `node scripts/make-logos.mjs` | Regenerates the logos in `public/` |
 
@@ -47,11 +48,19 @@ write/app/ + write/src/        Kwiiva Write, the document editor (React + Tiptap
   components/                  Menus, toolbar, dialogs, start screen
 tests/                         Unit tests (PDF engine, DOCX round trips, counters)
 e2e/                           Playwright tests: site, both editors, phone layouts
-src-tauri/, src-tauri-write/   The small Rust shells for the two desktop apps
+write/app/ + write/src/        (above)
+grid/app/ + grid/src/          Kwiiva Grid, the spreadsheet (React, canvas drawing, its own formula engine)
+  engine/                      Parser, evaluator, 400+ functions, number formats, dates, workbook model
+  engine/functions/            One file per family of functions
+  formats/                     .xlsx reader and writer, CSV
+  actions/                     What the interface does: edit, format, clipboard, fill, sort, filter
+src-tauri/, src-tauri-write/, src-tauri-grid/   The small Rust shells for the desktop apps
 .github/workflows/             CI and the release pipeline
 ```
 
 Inside `write/src/formats/`, `docxWrite.ts` and `docxRead.ts` are written from the file format itself with no third-party library, and `tests/write-docx.test.ts` round-trips every feature; add a case there when you add a feature that gets saved.
+
+In Kwiiva Grid, add a function in `grid/src/engine/functions/` with `def('NAME', min, max, fn)` (or `lazy` if it must not evaluate every argument) and a case in `tests/grid-engine.test.ts`; `grid/src/engine/docs.ts` holds the one-line help. `.xlsx` support is written from the file format with no library; `tests/grid-xlsx.test.ts` round-trips every feature and checks the file with an independent reader.
 
 Inside `src/engine/` (Kwiiva Paper): `text.ts` reads text and groups it into lines and paragraphs; `edit.ts` rewrites a paragraph (re-flow, font choice) and is the trickiest file, so read its tests first; `annotate.ts`, `pages.ts`, `search.ts`, `forms.ts`, `ocr.ts`, `qpdf.ts`, `sign.ts`/`verify.ts`, `pdfa.ts`, `access.ts` and the rest each own one feature.
 

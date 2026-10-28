@@ -1,0 +1,11 @@
+// Importing these files registers every function with the evaluator.
+import './math'
+import './stats'
+import './text'
+import './logic'
+import './lookup'
+import './datetime'
+import './financial'
+import './engineering'
+import './google'
+export { FUNCS } from '../eval'

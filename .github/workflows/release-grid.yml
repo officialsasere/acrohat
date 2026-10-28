@@ -1,0 +1,17 @@
+name: Release Kwiiva Grid
+# Run it from the Actions tab ("Release Kwiiva Grid" → "Run workflow"), or push a tag such as grid-v0.1.0.
+# The installer file names (KwiivaGrid-Windows-Setup.exe and so on) are what the website's Download buttons point at.
+on:
+  push:
+    tags: ['grid-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/desktop-release.yml
+    with: { app: grid, title: Kwiiva Grid, dir: src-tauri-grid, prefix: KwiivaGrid }
+    permissions:
+      contents: write

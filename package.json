@@ -16,7 +16,9 @@
     "verify": "yarn typecheck && oxlint && yarn test",
     "build:paper": "tsc -b && cross-env KWIIVA_APP=paper vite build && node scripts/prune-dist.mjs paper",
     "build:write": "tsc -b && cross-env KWIIVA_APP=write vite build && node scripts/prune-dist.mjs write",
-    "prebuild:paper": "node scripts/copy-ocr-assets.mjs"
+    "prebuild:paper": "node scripts/copy-ocr-assets.mjs",
+    "build:grid": "tsc -b && cross-env KWIIVA_APP=grid vite build && node scripts/prune-dist.mjs grid",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@embedpdf/pdfium": "^2.15.1",
@@ -66,6 +68,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "cross-env": "^10.1.0",
+    "exceljs": "^4.4.0",
     "happy-dom": "^21.0.4",
     "oxlint": "^1.88.0",
     "pngjs": "^7.0.0",

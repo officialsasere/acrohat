@@ -431,3 +431,25 @@ test('the interface does not compare itself to other products', async ({ page })
   const text = (await page.locator('body').innerText()).toLowerCase()
   for (const w of ['powerpoint', 'google slides', 'keynote', 'microsoft', 'adobe']) expect(text).not.toContain(w)
 })
+
+test('changes are saved to the file by themselves once it has been saved', async ({ page }) => {
+  await page.addInitScript(() => {
+    const w = window as never as Record<string, unknown>
+    w.__writes = [] as number[]
+    w.showSaveFilePicker = async () => { let chunk = 0; return { name: 'auto.pptx', queryPermission: async () => 'granted', createWritable: async () => ({ write: async (b: Uint8Array) => { chunk = b.length }, close: async () => { (w.__writes as number[]).push(chunk) } }) } }
+  })
+  await page.goto('/present/app/')
+  await blank(page)
+  await page.keyboard.press('ControlOrMeta+s')
+  await expect.poll(() => page.evaluate(() => (window as never as { __writes: number[] }).__writes.length)).toBe(1)
+  await expect(page.locator('.save-state')).toContainText('All changes saved to the file')
+  await hit(page, 0).dblclick(); await page.keyboard.type('Typed after saving'); await page.keyboard.press('Escape')
+  await expect.poll(() => page.evaluate(() => (window as never as { __writes: number[] }).__writes.length), { timeout: 10000 }).toBeGreaterThan(1)
+  await expect(page.locator('.save-state')).toContainText('All changes saved to the file')
+  await page.getByRole('button', { name: 'File' }).click()
+  await page.getByRole('button', { name: 'Save automatically' }).click()
+  const n = await page.evaluate(() => (window as never as { __writes: number[] }).__writes.length)
+  await hit(page, 0).dblclick(); await page.keyboard.type(' and more'); await page.keyboard.press('Escape')
+  await page.waitForTimeout(4000)
+  expect(await page.evaluate(() => (window as never as { __writes: number[] }).__writes.length)).toBe(n)
+})

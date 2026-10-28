@@ -1,6 +1,7 @@
 import { call } from '../engine/client'
 import { useStore } from '../store'
 import { errText, nativeRead, nativeWrite } from '../../shared/native'
+import { handleWritable, makeAutosaver } from '../../shared/autosave'
 import { isTauri } from './platform'
 
 type PickerWindow = Window & {
@@ -100,12 +101,15 @@ export async function download(name: string, bytes: Uint8Array) {
 }
 
 /** Saves the active document. `saveAs` always asks for a location. */
-export async function saveActive(saveAs = false) {
+export async function saveActive(saveAs = false, silent = false, id?: string) {
   const s = useStore.getState()
-  const doc = s.active()
+  const doc = id ? s.docs.find((d) => d.id === id) : s.active()
   if (!doc) return
-  const bytes = await s.run(() => call('save', { id: doc.id }))
+  // Automatic saving only updates the file this document already has; it never asks where to put one.
+  if (silent && (saveAs || !(doc.path || doc.handle) || (doc.handle && !(await handleWritable(doc.handle))))) return
+  const bytes = silent ? await call('save', { id: doc.id }).catch(() => null) : await s.run(() => call('save', { id: doc.id }))
   if (!bytes) return
+  const infoBefore = doc.info
   const w = window as PickerWindow
   try {
     if (isTauri) {
@@ -114,8 +118,8 @@ export async function saveActive(saveAs = false) {
       path ??= (await save({ defaultPath: doc.name, filters: [{ name: 'PDF documents', extensions: ['pdf'] }] })) ?? undefined
       if (!path) return
       await nativeWrite(path, bytes)
-      s.markSaved(doc.id, baseName(path), undefined, path)
-      s.toast('success', `Saved ${baseName(path)}`)
+      s.markSaved(doc.id, baseName(path), undefined, path, silent ? infoBefore : undefined)
+      if (!silent) s.toast('success', `Saved ${baseName(path)}`)
       return
     }
     let handle = saveAs ? undefined : doc.handle
@@ -124,15 +128,15 @@ export async function saveActive(saveAs = false) {
       const stream = await handle.createWritable()
       await stream.write(bytes as BlobPart)
       await stream.close()
-      s.markSaved(doc.id, handle.name, handle)
-      s.toast('success', `Saved ${handle.name}`)
+      s.markSaved(doc.id, handle.name, handle, undefined, silent ? infoBefore : undefined)
+      if (!silent) s.toast('success', `Saved ${handle.name}`)
       return
     }
     download(doc.name, bytes)
     s.markSaved(doc.id)
     s.toast('success', `Downloaded ${doc.name}`)
   } catch (e) {
-    if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${errText(e)}`)
+    if ((e as Error).name !== 'AbortError') s.toast('error', silent ? `Automatic save failed: ${errText(e)}` : `Could not save: ${errText(e)}`)
   }
 }
 
@@ -165,3 +169,8 @@ export async function printActive() {
     setTimeout(() => root.remove(), 1000)
   }
 }
+
+/** Saves every document that has a file and unsaved changes, a moment after the last change. */
+export const autosaver = makeAutosaver(async () => {
+  for (const d of useStore.getState().docs) if (d.dirty && (d.path || d.handle)) await saveActive(false, true, d.id)
+})

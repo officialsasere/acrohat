@@ -1,4 +1,5 @@
 import { errText, nativeRead, nativeWrite } from '../../../shared/native'
+import { handleWritable, makeAutosaver } from '../../../shared/autosave'
 import { isTauri } from '../../../src/lib/platform'
 import { useStore, type FileKind } from '../store'
 import { buildTemplate } from '../templates'
@@ -112,10 +113,13 @@ async function render(kind: FileKind, deck: Deck): Promise<Uint8Array | string> 
   return kind === 'md' ? o.deckToOutline(deck) : o.deckToText(deck)
 }
 
-export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
+export async function save(o: { saveAs?: boolean; kind?: FileKind; silent?: boolean } = {}) {
   const s = useStore.getState()
+  // Automatic saving only updates the file this deck already has; it never asks where to put one.
+  if (o.silent && (!s.file.dirty || o.kind || o.saveAs || s.file.kind !== 'pptx' || !(s.file.path || s.file.handle) || (s.file.handle && !(await handleWritable(s.file.handle))))) return
   const kind: FileKind = o.kind ?? s.file.kind ?? 'pptx'
   const name = (s.file.name.trim() || 'Untitled presentation')
+  const savedDeck = s.deck
   const deck = { ...s.deck, title: name }
   let data: Uint8Array | string
   try { data = await render(kind, deck) } catch (e) { s.toast('error', `Could not make the ${KINDS[kind].ext} file: ${(e as Error).message}`); return }
@@ -129,8 +133,8 @@ export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
       let path = persist ? s.file.path : undefined
       if (!path) { const p = await dlg({ defaultPath: `${name}.${k.ext}`, filters: [{ name: k.label, extensions: [k.ext] }] }); if (!p) return; path = p }
       await nativeWrite(path, bytes)
-      if (kind === 'pptx') useStore.setState({ file: { ...s.file, path, name: stem(baseName(path)), kind, dirty: false } })
-      s.toast('success', `Saved ${baseName(path)}`)
+      if (kind === 'pptx') useStore.setState((st) => ({ file: { ...st.file, path, name: stem(baseName(path)), kind, dirty: !!o.silent && st.deck !== savedDeck } }))
+      if (!o.silent) s.toast('success', `Saved ${baseName(path)}`)
       return
     }
     if (w.showSaveFilePicker) {
@@ -139,11 +143,11 @@ export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
       const wr = await handle.createWritable()
       await wr.write(bytes as unknown as BufferSource)
       await wr.close()
-      if (kind === 'pptx') useStore.setState({ file: { ...s.file, handle, name: stem(handle.name), kind, dirty: false } })
-      s.toast('success', `Saved ${handle.name}`)
+      if (kind === 'pptx') useStore.setState((st) => ({ file: { ...st.file, handle, name: stem(handle.name), kind, dirty: !!o.silent && st.deck !== savedDeck } }))
+      if (!o.silent) s.toast('success', `Saved ${handle.name}`)
       return
     }
-  } catch (e) { if ((e as Error).name === 'AbortError') return; s.toast('error', `Could not save: ${errText(e)}`); return }
+  } catch (e) { if ((e as Error).name === 'AbortError') return; s.toast('error', o.silent ? `Automatic save failed: ${errText(e)}` : `Could not save: ${errText(e)}`); return }
   download(`${name}.${k.ext}`, bytes as unknown as BlobPart, k.mime)
   if (kind === 'pptx') useStore.setState({ file: { ...s.file, kind, dirty: false } })
   s.toast('success', `Downloaded ${name}.${k.ext}`)
@@ -152,3 +156,5 @@ export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
 export async function exportAs(k: FileKind) { await save({ kind: k, saveAs: true }) }
 export function printDeck() { void import('./print').then((m) => m.printDeck()) }
 export { download }
+
+export const autosaver = makeAutosaver(() => save({ silent: true }))

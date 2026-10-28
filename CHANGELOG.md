@@ -1,5 +1,9 @@
 # Changelog
 
+## All apps
+- **Automatic saving**: once a file has been saved, changes are written to it by themselves. Switch it off in the File menu (Kwiiva Paper: the Auto button).
+- Saving in the desktop apps no longer depends on the general file plugin, and error messages now say what went wrong.
+
 ## Kwiiva Present 0.1.0 – first release
 - A presentation app: ten themes with eight layouts, an editable slide master, text with bullets and numbering, nearly 90 shapes, lines and connectors, pictures, tables, charts, audio and video.
 - Animations (entrance, emphasis, exit) and slide transitions; a full-screen show with pen, highlighter and laser pointer, a presenter view with notes and a timer, and an audience window.

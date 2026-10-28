@@ -254,3 +254,21 @@ test('nothing in the editor mentions other products', async ({ page }) => {
   await blank(page)
   await expect(page.locator('body')).not.toContainText(/microsoft|google|\bword\b(?! count)/i)
 })
+
+test('changes are saved to the file by themselves once it has been saved', async ({ page }) => {
+  await page.addInitScript(() => {
+    const w = window as never as Record<string, unknown>
+    w.__writes = [] as number[]
+    w.showSaveFilePicker = async () => { let chunk = 0; return { name: 'auto.docx', queryPermission: async () => 'granted', createWritable: async () => ({ write: async (b: Uint8Array) => { chunk = b.length }, close: async () => { (w.__writes as number[]).push(chunk) } }) } }
+  })
+  await page.goto('/write/app/')
+  await blank(page)
+  await page.locator('.ProseMirror').click()
+  await page.keyboard.type('First draft')
+  await page.keyboard.press('ControlOrMeta+s')
+  const count = () => page.evaluate(() => (window as never as { __writes: number[] }).__writes.length)
+  await expect.poll(count).toBe(1)
+  await page.keyboard.type(' and then more words')
+  await expect.poll(count, { timeout: 10000 }).toBeGreaterThan(1)
+  await expect(page.locator('.save-state')).toContainText('All changes saved to auto.docx')
+})

@@ -3,6 +3,7 @@ import { copyFormat, pasteFormat } from './format'
 import { insertChart, insertMediaFile, insertPictureFromDisk, insertShape, insertLine, insertTextBox } from './insert'
 import { exportAs, newDeck, openFile, printDeck, save } from './lib/files'
 import { startShow } from './show/start'
+import { autosaveOn, setAutosave } from '../../shared/autosave'
 import { curIndex, useStore, type Dialog, type FileKind, type MenuItem } from './store'
 
 export type { MenuItem }
@@ -31,7 +32,9 @@ export function menus(): { name: string; items: Item[] }[] {
       { label: 'Home (templates and recent)', run: () => useStore.setState({ screen: 'home' }) },
       { label: 'Import outline…', run: dlg('importOutline') },
       'sep',
-      { label: 'Save', key: K('Ctrl+S'), run: () => void save() },
+{ label: 'Save automatically', checked: autosaveOn(), run: () => { setAutosave(!autosaveOn()); S().set({ tick: S().tick + 1 }) } },
+      
+            { label: 'Save', key: K('Ctrl+S'), run: () => void save() },
       { label: 'Save as…', key: K('Ctrl+Shift+S'), run: () => void save({ saveAs: true }) },
       { label: 'Download a copy as', sub: FILES.map((f): Item => ({ label: f.label, run: () => void exportAs(f.k) })) },
       { label: 'Export every slide as pictures…', run: dlg('exportImages') },

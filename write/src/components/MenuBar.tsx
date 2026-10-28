@@ -1,3 +1,4 @@
+import { autosaveOn, setAutosave } from '../../../shared/autosave'
 import { Fragment, useState } from 'react'
 import { addPageNumbers, dialog, ed, goHome, insertDate, KINDS, newBlank, openFile, pickImage, printDoc, save, speechToggle, toggleFind, toggleTheme } from '../editor/actions'
 import { clearFormatting } from '../editor/commands'
@@ -25,6 +26,7 @@ function menus(): { name: string; items: Item[] }[] {
         { label: 'Open…', key: K('Ctrl+O'), run: openFile },
         { label: 'Home (templates and recent)', run: goHome },
         'sep',
+        { label: 'Save automatically', checked: autosaveOn(), run: () => { setAutosave(!autosaveOn()); useStore.setState((s) => ({ doc: { ...s.doc } })) } },
         { label: 'Save', key: K('Ctrl+S'), run: () => save() },
         { label: 'Save a copy as', sub: (['docx', 'html', 'md', 'txt'] as FileKind[]).map(exportAs) },
         { label: 'Print / Save as PDF…', key: K('Ctrl+P'), run: printDoc },

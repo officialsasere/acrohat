@@ -19,6 +19,9 @@ More apps will be added here.
 
 <p align="center"><b>If Kwiiva is useful to you, please <a href="https://github.com/officialsasere/kwiiva">⭐ star the project</a>.</b> It is how other people find it.</p>
 
+## Saving
+Every app keeps your work in the browser or app as you type, so nothing is lost. Save a file once (Ctrl+S) to choose where it lives; after that **changes are written to that file automatically** a couple of seconds after you stop typing. Turn it off with **File → Save automatically** (the **Auto** button in Kwiiva Paper). In a browser that cannot keep a file open (Firefox, Safari) the first Save downloads a copy and automatic saving does not apply; use the desktop app for that.
+
 ## See it
 
 | | |

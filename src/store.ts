@@ -68,7 +68,7 @@ interface State {
   closeDoc: (id: string) => Promise<void>
   update: (id: string, info: DocInfo, dirty?: boolean) => void
   run: <T>(fn: () => Promise<T>) => Promise<T | undefined>
-  markSaved: (id: string, name?: string, handle?: FileSystemFileHandle, path?: string) => void
+  markSaved: (id: string, name?: string, handle?: FileSystemFileHandle, path?: string, unchangedSince?: DocInfo) => void
 }
 
 let toastId = 1
@@ -162,8 +162,8 @@ export const useStore = create<State>((set, get) => ({
   update: (id, info, dirty = true) =>
     set((s) => ({ docs: s.docs.map((d) => (d.id === id ? { ...d, info, dirty: d.dirty || dirty } : d)) })),
 
-  markSaved: (id, name, handle, path) =>
-    set((s) => ({ docs: s.docs.map((d) => (d.id === id ? { ...d, dirty: false, name: name ?? d.name, handle: handle ?? d.handle, path: path ?? d.path } : d)) })),
+  markSaved: (id, name, handle, path, unchangedSince) =>
+    set((s) => ({ docs: s.docs.map((d) => (d.id === id ? { ...d, dirty: unchangedSince !== undefined && d.info !== unchangedSince, name: name ?? d.name, handle: handle ?? d.handle, path: path ?? d.path } : d)) })),
 
   run: async (fn) => {
     try {

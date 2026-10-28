@@ -1,4 +1,5 @@
 import { errText, nativeRead, nativeWrite } from '../../../shared/native'
+import { handleWritable, makeAutosaver } from '../../../shared/autosave'
 import { isTauri } from '../../../src/lib/platform'
 import type { Book } from '../engine/book'
 import { readCsv, writeCsv, writeHtml, writeJson } from '../formats/csv'
@@ -88,16 +89,19 @@ function download(name: string, bytes: Uint8Array, mime: string) {
 }
 
 /** Saves the spreadsheet. A copy in another format never replaces the file you are working on. */
-export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
+export async function save(o: { saveAs?: boolean; kind?: FileKind; silent?: boolean } = {}) {
   const s = useStore.getState(), book = s.book
+  // Automatic saving only updates the file this spreadsheet already has; it never asks where to put one.
+  if (o.silent && (!s.file.dirty || o.kind || o.saveAs || !(s.file.path || s.file.handle) || (s.file.handle && !(await handleWritable(s.file.handle))))) return
   const kind: FileKind = o.kind ?? (s.file.kind === 'xlsx' || !s.file.kind ? 'xlsx' : 'xlsx')
   const asCopy = !!o.kind && o.kind !== 'xlsx'
   const name = `${(s.file.name || 'Spreadsheet').replace(/[\\/:*?"<>|]+/g, '')}.${KINDS[kind].ext}`
   const bytes = encode(book, kind)
   const w = window as Picker
+  const version = book.version
   const done = (fileName: string, extra: { handle?: FileSystemFileHandle; path?: string } = {}) => {
-    if (!asCopy) useStore.setState({ file: { ...useStore.getState().file, name: stem(fileName), kind: 'xlsx', dirty: false, ...extra } })
-    s.toast('success', `Saved ${fileName}`)
+    if (!asCopy) useStore.setState({ file: { ...useStore.getState().file, name: stem(fileName), kind: 'xlsx', dirty: !!o.silent && useStore.getState().book.version !== version, ...extra } })
+    if (!o.silent) s.toast('success', `Saved ${fileName}`)
   }
   try {
     if (isTauri) {
@@ -113,7 +117,7 @@ export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
     if (handle) { const st = await handle.createWritable(); await st.write(bytes as BlobPart); await st.close(); return done(handle.name, { handle }) }
     download(name, bytes, KINDS[kind].mime)
     done(name)
-  } catch (e) { if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${errText(e)}`) }
+  } catch (e) { if ((e as Error).name !== 'AbortError') s.toast('error', o.silent ? `Automatic save failed: ${errText(e)}` : `Could not save: ${errText(e)}`) }
 }
 
 /** Prints the active sheet's data through the system print dialog ("Save as PDF" there makes a PDF). */
@@ -141,3 +145,5 @@ export function openDraft(d: Draft) {
   catch (e) { useStore.getState().toast('error', `Could not open the saved copy: ${(e as Error).message}`) }
 }
 export { BookClass, newWorkbook }
+
+export const autosaver = makeAutosaver(() => save({ silent: true }))

@@ -4,6 +4,7 @@ import { clearSelection } from '../actions/edit'
 import { copy } from '../actions/clipboard'
 import { fillDown, fillRight, removeDuplicates, sortSelection, toggleFilter, trimSpaces } from '../actions/data'
 import { deleteCols, deleteRows, freeze, freezeAtCursor, hideCols, hideRows, insertCols, insertRows, toggleGridlines, unfreeze } from '../actions/structure'
+import { autosaveOn, setAutosave } from '../../../shared/autosave'
 import { KINDS, newBook, openFile, printSheet, save } from '../lib/files'
 import { selectAll } from '../actions/nav'
 import { useBook } from '../hooks'
@@ -28,7 +29,9 @@ function menus(): { name: string; items: Item[] }[] {
       { label: 'Open…', key: K('Ctrl+O'), run: () => void openFile() },
       { label: 'Home (templates and recent)', run: () => useStore.setState({ screen: 'home' }) },
       'sep',
-      { label: 'Save', key: K('Ctrl+S'), run: () => void save() },
+{ label: 'Save automatically', checked: autosaveOn(), run: () => { setAutosave(!autosaveOn()); useStore.getState().bump() } },
+      
+            { label: 'Save', key: K('Ctrl+S'), run: () => void save() },
       { label: 'Save as…', key: K('Ctrl+Shift+S'), run: () => void save({ saveAs: true }) },
       { label: 'Download a copy as', sub: (['xlsx', 'csv', 'tsv', 'html', 'json'] as FileKind[]).map(exportAs) },
       { label: 'Print…', key: K('Ctrl+P'), run: () => printSheet() },

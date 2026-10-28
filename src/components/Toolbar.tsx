@@ -1,4 +1,6 @@
 import { call } from '../engine/client'
+import { useState } from 'react'
+import { autosaveOn, setAutosave } from '../../shared/autosave'
 import { saveActive, openFiles, printActive } from '../lib/files'
 import { toggleReadAloud } from '../lib/speech'
 import { useStore, type Tool } from '../store'
@@ -41,6 +43,7 @@ export function Toolbar({ onSignature, onSplit, onTools }: { onSignature: () => 
         <button title="Save (Ctrl/⌘+S)" disabled={!doc} onClick={() => saveActive()}>
           <Icon name="save" />
         </button>
+        <AutoSaveToggle />
         <button title="Undo (Ctrl/⌘+Z)" disabled={!doc?.info.canUndo} onClick={() => apply('undo')}>
           <Icon name="undo" />
         </button>
@@ -137,5 +140,15 @@ export function Toolbar({ onSignature, onSplit, onTools }: { onSignature: () => 
         </button>
       </div>
     </div>
+  )
+}
+
+/** Switches saving to the open file by itself on or off (a document without a file is only kept in this browser until it is saved once). */
+function AutoSaveToggle() {
+  const [on, setOn] = useState(autosaveOn())
+  return (
+    <button title={on ? 'Saving to the file automatically. Click to turn off' : 'Automatic saving is off. Click to turn on'} aria-pressed={on} className={on ? 'on' : ''} style={{ fontSize: 12, padding: '0 8px' }} onClick={() => { setAutosave(!on); setOn(!on) }}>
+      Auto {on ? 'on' : 'off'}
+    </button>
   )
 }

@@ -30,6 +30,43 @@ fn read_doc(path: String) -> Result<Response, String> {
     std::fs::read(p).map(Response::new).map_err(|e| format!("{e}"))
 }
 
+/// Document types the apps may write. The path comes from the system "Save" dialog; this list keeps the webview from writing programs or scripts.
+const WRITABLE: [&str; 17] = ["pdf", "docx", "xlsx", "pptx", "csv", "tsv", "txt", "md", "markdown", "html", "htm", "json", "png", "jpg", "jpeg", "zip", "svg"];
+
+fn percent_decode(s: &str) -> String {
+    let b = s.as_bytes();
+    let mut out = Vec::with_capacity(b.len());
+    let mut i = 0;
+    while i < b.len() {
+        if b[i] == b'%' && i + 2 < b.len() {
+            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
+                out.push(v);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(b[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
+/// Writes a file the person chose in the Save dialog. The contents are the request body; the path is in the `path` header.
+#[tauri::command]
+fn write_doc(request: tauri::ipc::Request<'_>) -> Result<(), String> {
+    let raw = request.headers().get("path").and_then(|v| v.to_str().ok()).ok_or("No file name was given")?;
+    let path = percent_decode(raw);
+    let p = Path::new(&path);
+    let ok = p.extension().and_then(|e| e.to_str()).is_some_and(|e| WRITABLE.iter().any(|x| e.eq_ignore_ascii_case(x)));
+    if !ok {
+        return Err("That type of file cannot be saved this way".into());
+    }
+    match request.body() {
+        tauri::ipc::InvokeBody::Raw(bytes) => std::fs::write(p, bytes).map_err(|e| format!("{e}")),
+        _ => Err("No file contents were sent".into()),
+    }
+}
+
 fn queue(app: &AppHandle, paths: impl IntoIterator<Item = String>) {
     let paths: Vec<String> = paths.into_iter().filter(|p| is_deck(Path::new(p))).collect();
     if paths.is_empty() {
@@ -45,7 +82,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .manage(Pending::default())
-        .invoke_handler(tauri::generate_handler![take_opened_files, read_doc])
+        .invoke_handler(tauri::generate_handler![take_opened_files, read_doc, write_doc])
         .setup(|app| {
             // Windows/Linux pass the file as a command-line argument.
             queue(app.handle(), std::env::args().skip(1));

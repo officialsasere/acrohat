@@ -28,6 +28,10 @@ export const PRODUCTS: Record<string, { tag: string; files: string[] }> = {
     tag: 'grid-latest',
     files: ['KwiivaGrid-Windows-Setup.exe', 'KwiivaGrid-Windows.msi', 'KwiivaGrid-macOS-AppleSilicon.dmg', 'KwiivaGrid-macOS-Intel.dmg', 'KwiivaGrid-Linux.AppImage', 'KwiivaGrid-Linux.deb'],
   },
+  present: {
+    tag: 'present-latest',
+    files: ['KwiivaPresent-Windows-Setup.exe', 'KwiivaPresent-Windows.msi', 'KwiivaPresent-macOS-AppleSilicon.dmg', 'KwiivaPresent-macOS-Intel.dmg', 'KwiivaPresent-Linux.AppImage', 'KwiivaPresent-Linux.deb'],
+  },
 }
 export const REPO = { owner: 'officialsasere', name: 'kwiiva' }
 

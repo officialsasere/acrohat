@@ -18,6 +18,7 @@
     "build:write": "tsc -b && cross-env KWIIVA_APP=write vite build && node scripts/prune-dist.mjs write",
     "prebuild:paper": "node scripts/copy-ocr-assets.mjs",
     "build:grid": "tsc -b && cross-env KWIIVA_APP=grid vite build && node scripts/prune-dist.mjs grid",
+    "build:present": "tsc -b && cross-env KWIIVA_APP=present vite build && node scripts/prune-dist.mjs present",
     "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {

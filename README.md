@@ -9,6 +9,7 @@ Free, open-source apps that run on your own computer. No accounts, no uploads, n
 | <img src="public/paper.svg" width="28" alt="" /> **Kwiiva Paper** | Edit, convert and sign PDFs | [details below](#kwiiva-paper) · web version at `/paper/app/` |
 | <img src="public/write.svg" width="28" alt="" /> **Kwiiva Write** | Write documents, open and save DOCX | [details below](#kwiiva-write) · web version at `/write/app/` |
 | <img src="public/grid.svg" width="28" alt="" /> **Kwiiva Grid** | Spreadsheets: formulas, charts, pivot tables, XLSX | [details below](#kwiiva-grid) · web version at `/grid/app/` |
+| <img src="public/present.svg" width="28" alt="" /> **Kwiiva Present** | Presentations: themes, charts, animations, PPTX | [details below](#kwiiva-present) · web version at `/present/app/` |
 
 More apps will be added here.
 
@@ -23,7 +24,11 @@ More apps will be added here.
 | | |
 |---|---|
 | **Kwiiva Paper**: edit text in a PDF, convert and sign<br><a href="docs/screenshots/paper.png"><img src="docs/screenshots/paper.png" alt="Kwiiva Paper editing a PDF" width="420" /></a> | **Kwiiva Write**: documents with real pages, tables and DOCX<br><a href="docs/screenshots/write.png"><img src="docs/screenshots/write.png" alt="Kwiiva Write with a report open" width="420" /></a> |
-| **Kwiiva Grid**: spreadsheets with 400+ functions, charts and pivot tables<br><a href="docs/screenshots/grid.png"><img src="docs/screenshots/grid.png" alt="Kwiiva Grid with a budget and a chart" width="420" /></a> | **On a phone**: all three work in a mobile browser<br><img src="docs/screenshots/paper-mobile.png" alt="Kwiiva Paper on a phone" width="120" /> <img src="docs/screenshots/write-mobile.png" alt="Kwiiva Write on a phone" width="120" /> <img src="docs/screenshots/grid-mobile.png" alt="Kwiiva Grid on a phone" width="120" /> |
+| **Kwiiva Grid**: spreadsheets with 400+ functions, charts and pivot tables<br><a href="docs/screenshots/grid.png"><img src="docs/screenshots/grid.png" alt="Kwiiva Grid with a budget and a chart" width="420" /></a> | **Kwiiva Present**: presentations with themes, charts and animations<br><a href="docs/screenshots/present.png"><img src="docs/screenshots/present.png" alt="Kwiiva Present editing a chart slide" width="420" /></a> |
+
+**On a phone**: all four work in a mobile browser.
+
+<p align="center"><img src="docs/screenshots/paper-mobile.png" alt="Kwiiva Paper on a phone" width="130" /> <img src="docs/screenshots/write-mobile.png" alt="Kwiiva Write on a phone" width="130" /> <img src="docs/screenshots/grid-mobile.png" alt="Kwiiva Grid on a phone" width="130" /> <img src="docs/screenshots/present-mobile.png" alt="Kwiiva Present on a phone" width="130" /></p>
 
 _The pictures are made by `yarn screenshots`, so they always show the real apps._
 
@@ -160,9 +165,47 @@ The same first-run warnings as Kwiiva Paper apply (the installers are not code-s
 
 The same first-run warnings as the other apps apply (the installers are not code-signed). Or use it in the browser at `/grid/app/`.
 
+## Kwiiva Present
+
+<p align="center"><img src="public/present-lockup.svg" width="300" alt="Kwiiva Present" /></p>
+
+**Presentations, free and open source,** on Windows, macOS, Linux, in the browser and on your phone. No account, nothing uploaded; your work is kept on your device as you go.
+
+| | |
+|---|---|
+| **Slides** | Ten themes with eight layouts each (title, content, two columns, comparison, section, picture with caption…). Change the theme and every slide is recoloured; edit the **slide master** or a layout once and it applies everywhere. Slide sorter, sections, hidden slides, slide numbers, dates and footers, five slide sizes or your own |
+| **Text** | Real text editing in place: fonts, sizes, bold, italic, underline, colours, highlights, super- and subscript, links, bullets and numbering (five styles, any level), alignment, line and paragraph spacing, columns, shrink-to-fit |
+| **Objects** | Nearly 90 shapes (arrows, callouts, flowchart symbols, stars, brackets…) with an adjust handle each, lines and elbow or curved connectors with arrowheads, pictures (crop to a shape, borders, shadows), **tables** (merged cells, banded rows, resize by dragging), **charts** (column, bar, line, area, pie, doughnut, scatter, radar; edit the data like a small sheet), audio and video, groups |
+| **Arrange** | Move, resize and rotate with handles; smart guides that snap to other objects and the slide centre; align, distribute, order, group, flip, lock; arrow-key nudging; grid and centre guides; copy, paste, duplicate (Ctrl-drag) |
+| **Animate** | Entrance, emphasis and exit effects (appear, fade, fly, wipe, zoom, float, split, blinds, grow, spin, pulse, teeter…), on click / with previous / after previous, with duration and delay, paragraph by paragraph; slide transitions (fade, push, wipe, cover, zoom, flip, cube, dissolve, morph…) and automatic timings |
+| **Present** | Full screen, keyboard, mouse and swipe navigation, jump to any slide, pen, highlighter, eraser and **laser pointer**, black and white screens, an all-slides view, and a **presenter view** with notes, the next slide and a timer, plus a second **audience window** for a projector |
+| **Files** | Open and save **.pptx**; export **PDF**, **PNG pictures** (all slides in a .zip), a **single web page** that plays the show anywhere, or a plain **outline**; make slides from an outline in Markdown; print |
+| **Phones** | Tap to select, drag to move, a slide strip, a bottom sheet for formatting, swipe through the show, and **Add to Home Screen** |
+
+### Honest limitations (Kwiiva Present)
+- **A .pptx made by Kwiiva Present reopens exactly in Kwiiva Present** (a copy of the deck is kept inside the file). If another program has edited the file since, Kwiiva Present reads the standard parts instead: text, shapes, pictures, tables, charts, notes, transitions and animations are read, but some things are not.
+- **Not supported when opening other files:** SmartArt that has no saved picture, equations, 3D models, ink drawings, embedded objects, WordArt effects and custom table styles (tables are drawn in a similar look). Comments are not read. The program says so when it leaves something out.
+- **Videos and audio are kept in Kwiiva Present but are not written into .pptx files.** They are included in the web page export.
+- **Some transitions are simpler in other programs**: flip, cube and morph are saved as a fade in .pptx.
+- **The PDF is made from pictures of each slide** (text cannot be selected). For a PDF with selectable text use Print → Save as PDF.
+- **No real-time collaboration, comments or version history.** Share the file instead.
+- **No text effects** such as reflection or 3D, and no equation editor.
+- **Fonts**: slides keep the font names you chose. If a font is not installed on a device, a similar built-in one is used (Carlito, Caladea and Liberation are built in), so line breaks can differ a little.
+
+### Install (Kwiiva Present)
+
+| System | Download |
+|---|---|
+| Windows | [KwiivaPresent-Windows-Setup.exe](https://github.com/officialsasere/kwiiva/releases/download/present-latest/KwiivaPresent-Windows-Setup.exe) · [.msi](https://github.com/officialsasere/kwiiva/releases/download/present-latest/KwiivaPresent-Windows.msi) |
+| macOS (Apple silicon) | [KwiivaPresent-macOS-AppleSilicon.dmg](https://github.com/officialsasere/kwiiva/releases/download/present-latest/KwiivaPresent-macOS-AppleSilicon.dmg) |
+| macOS (Intel) | [KwiivaPresent-macOS-Intel.dmg](https://github.com/officialsasere/kwiiva/releases/download/present-latest/KwiivaPresent-macOS-Intel.dmg) |
+| Linux | [KwiivaPresent-Linux.AppImage](https://github.com/officialsasere/kwiiva/releases/download/present-latest/KwiivaPresent-Linux.AppImage) · [.deb](https://github.com/officialsasere/kwiiva/releases/download/present-latest/KwiivaPresent-Linux.deb) |
+
+The same first-run warnings as the other apps apply (the installers are not code-signed). Or use it in the browser at `/present/app/`.
+
 ## Privacy
 
-Your documents, spreadsheets and PDFs never leave your device, and nothing in them is read by anyone but you. There are no accounts and no tracking of what you do inside the apps.
+Your documents, spreadsheets, presentations and PDFs never leave your device, and nothing in them is read by anyone but you. There are no accounts and no tracking of what you do inside the apps.
 
 The website shows how much Kwiiva is used. To make that possible:
 - **Downloads** from the website go through a tiny counter (`netlify/functions/stats.mts`) that adds one to a total and sends you on to GitHub.

@@ -27,7 +27,7 @@ Not sure where to start? Look for issues labelled **good first issue** or **help
 | `yarn test` | Unit tests for the PDF engine (Vitest, no browser) |
 | `yarn test:e2e` | Browser tests that drive the real UI (first time: `npx playwright install chromium`) |
 | `yarn build` | Production build of the whole site into `dist/` |
-| `yarn build:write` / `build:paper` / `build:grid` | Build one app only (what the desktop installers bundle) |
+| `yarn build:write` / `build:paper` / `build:grid` / `build:present` | Build one app only (what the desktop installers bundle) |
 | `yarn screenshots` | Retakes the README screenshots from the real apps |
 | `cd src-tauri-write && npx tauri dev` | Kwiiva Write desktop app (needs [Rust](https://rustup.rs) and the [Tauri prerequisites](https://tauri.app/start/prerequisites/)); use `src-tauri` for Kwiiva Paper |
 | `node scripts/make-logos.mjs` | Regenerates the logos in `public/` |
@@ -54,11 +54,18 @@ grid/app/ + grid/src/          Kwiiva Grid, the spreadsheet (React, canvas drawi
   engine/functions/            One file per family of functions
   formats/                     .xlsx reader and writer, CSV
   actions/                     What the interface does: edit, format, clipboard, fill, sort, filter
-src-tauri/, src-tauri-write/, src-tauri-grid/   The small Rust shells for the desktop apps
+present/app/ + present/src/    Kwiiva Present, the presentation app (React, DOM slides, TipTap text editing)
+  model.ts, geom.ts, themes.ts The deck model, preset shapes (same names as .pptx), themes and layouts
+  render/, editor/, ui/        Drawing slides, the editing canvas (select, move, resize, snap), toolbar and panels
+  show/                        The slide show: animations, transitions, presenter view, audience window
+  formats/                     .pptx reader and writer (no library), PDF, web page and outline export
+src-tauri/, src-tauri-write/, src-tauri-grid/, src-tauri-present/   The small Rust shells for the desktop apps
 .github/workflows/             CI and the release pipeline
 ```
 
 Inside `write/src/formats/`, `docxWrite.ts` and `docxRead.ts` are written from the file format itself with no third-party library, and `tests/write-docx.test.ts` round-trips every feature; add a case there when you add a feature that gets saved.
+
+In Kwiiva Present, a new preset shape is one entry in `present/src/geom.ts` (the name should be the one a .pptx uses) and a new theme is one entry in `present/src/themes.ts`. `tests/present-pptx.test.ts` round-trips every kind of object, reads a file made by another program (`tests/fixtures/pptx-sample.pptx`) and, if python-pptx is available, opens the result with it.
 
 In Kwiiva Grid, add a function in `grid/src/engine/functions/` with `def('NAME', min, max, fn)` (or `lazy` if it must not evaluate every argument) and a case in `tests/grid-engine.test.ts`; `grid/src/engine/docs.ts` holds the one-line help. `.xlsx` support is written from the file format with no library; `tests/grid-xlsx.test.ts` round-trips every feature and checks the file with an independent reader.
 

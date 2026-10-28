@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kwiiva Present – presentations, free</title>
+  <meta name="description" content="Free, open-source presentation maker with themes, charts, tables, animations, a presenter view and PPTX support. Your files never leave your computer." />
+  <link rel="icon" href="/present.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#8a5a36" />
+  <link rel="apple-touch-icon" href="/present-180.png" />
+  <style>
+    :root { --bg: #fbf6ee; --text: #2b1d14; --muted: #7a6552; --accent: #8a5a36; --on-accent: #fff; --card: #f3eadc; --border: #e4d5bf; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #17120e; --text: #f1e8dc; --muted: #b8a68f; --accent: #d4a373; --on-accent: #1c1612; --card: #231b15; --border: #43372c; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 17px/1.55 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+    main { max-width: 920px; margin: 0 auto; padding: 0 20px 80px; }
+    .topbar { max-width: 920px; margin: 0 auto; padding: 18px 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .topbar a { color: var(--muted); text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
+    .topbar a:hover { color: var(--text); }
+    .topbar img { width: 26px; height: 26px; }
+    header { padding: 40px 0 36px; text-align: center; }
+    header img { width: 84px; height: 84px; }
+    .product { margin: 14px 0 0; font-weight: 700; letter-spacing: .02em; color: var(--accent); }
+    h1 { font-size: clamp(34px, 6vw, 54px); line-height: 1.1; margin: 18px 0 12px; letter-spacing: -0.02em; }
+    .lead { font-size: 20px; color: var(--muted); max-width: 640px; margin: 0 auto 28px; }
+    .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    a.btn { display: inline-block; padding: 13px 24px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid var(--border); color: var(--text); }
+    a.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    a.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 640px; margin: 0 auto; text-align: left; }
+    .choice { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+    .choice h3 { margin: 0; font-size: 20px; }
+    .choice p { margin: 0 0 10px; color: var(--muted); font-size: 15.5px; }
+    .choice .small { margin: 6px 0 0; }
+    .small { color: var(--muted); font-size: 14px; margin-top: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 48px 0; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+    .card h3 { margin: 0 0 6px; font-size: 18px; }
+    .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    h2 { margin: 56px 0 10px; font-size: 28px; }
+    table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+    td, th { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    code { background: var(--card); padding: 2px 6px; border-radius: 5px; font-size: 14px; }
+    .dl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 16px 0; }
+    .dl-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
+    .dl-card.you { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+    .dl-card h3 { margin: 0; font-size: 20px; }
+    .dl-card p { margin: 0; color: var(--muted); font-size: 14px; }
+    .dl-card .btn { text-align: center; }
+    .dl-card .alt { color: var(--muted); font-size: 14px; }
+    .soon .btn, .soon .alt { opacity: .55; }
+    .stats { display: flex; gap: 6px 18px; justify-content: center; flex-wrap: wrap; color: var(--muted); font-size: 14px; margin: 8px 0 0; }
+    .stats strong { color: var(--text); font-variant-numeric: tabular-nums; }
+    [hidden] { display: none !important; }
+    footer { text-align: center; color: var(--muted); font-size: 14px; padding-bottom: 40px; }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+<nav class="topbar"><a href="/"><img src="/kwiiva.svg" alt="" />Kwiiva</a><a href="#downloads">Download</a></nav>
+<main>
+  <header>
+    <img src="/present.svg" alt="Kwiiva Present" />
+    <p class="product">Kwiiva Present</p>
+    <h1>Presentations.<br />Free.</h1>
+    <p class="lead">Build slides with <strong>themes</strong>, <strong>charts</strong> and <strong>animations</strong>, rehearse with a <strong>presenter view</strong>, and share a proper <strong>PPTX</strong> file. Open source, no account, nothing uploaded.</p>
+    <div class="choices" data-product="present">
+      <div class="choice">
+        <h3>Desktop app</h3>
+        <p>Install it on your laptop. Works offline and opens .pptx files straight from your folders.</p>
+        <a data-role="main" class="btn primary" href="#downloads">Download</a>
+        <p class="small" data-role="hint">Windows · macOS · Linux</p>
+      </div>
+      <div class="choice">
+        <h3>Web version</h3>
+        <p>Nothing to install. Runs in your browser; your deck is never uploaded.</p>
+        <a class="btn" href="/present/app/">Open in browser</a>
+        <p class="small">Chrome, Edge, Firefox, Safari · works on phones and tablets too (use "Add to Home Screen" to install it)</p>
+      </div>
+    </div>
+    <p class="small" id="download-note">Free forever · MIT licensed · no account</p>
+    <p class="stats" data-stats="present" hidden><span><strong data-stat="downloads">0</strong> downloads</span><span><strong data-stat="opens">0</strong> launches</span><span><strong data-stat="devices">0</strong> devices</span></p>
+  </header>
+
+  <section class="grid" aria-label="Features">
+    <div class="card"><h3>Themes &amp; layouts</h3><p>Ten themes with matching layouts. Change the theme and every slide is recoloured; edit the slide master once and it shows everywhere.</p></div>
+    <div class="card"><h3>Text that behaves</h3><p>Bullets, numbering, levels, columns, line spacing and shrink-to-fit. Every font in your files, with look-alike fonts built in.</p></div>
+    <div class="card"><h3>90 shapes &amp; connectors</h3><p>Arrows, callouts, flowchart symbols, stars and more, with fills, gradients, outlines, shadows and a handle to adjust each one.</p></div>
+    <div class="card"><h3>Tables &amp; charts</h3><p>Tables with merged cells and banded rows. Column, bar, line, area, pie, doughnut, scatter and radar charts you edit like a small sheet.</p></div>
+    <div class="card"><h3>Pictures, audio &amp; video</h3><p>Drop in pictures, crop them to a shape, add a border or shadow. Embed a clip or a sound that plays in the show.</p></div>
+    <div class="card"><h3>Animations &amp; transitions</h3><p>Entrance, emphasis and exit effects in the order you choose, paragraph by paragraph, plus slide transitions with timing.</p></div>
+    <div class="card"><h3>Present with confidence</h3><p>Full screen, pen, highlighter and laser pointer, jump to any slide, and a presenter view with notes, next slide and a timer.</p></div>
+    <div class="card"><h3>Open and save PPTX</h3><p>Open a .pptx and carry on, or save one to share. Export to PDF, pictures, a single web page or a plain outline.</p></div>
+    <div class="card"><h3>From an outline</h3><p>Type or paste an outline and get slides in a theme in one step, or edit all your slides as text.</p></div>
+    <div class="card"><h3>Never lose work</h3><p>Presentations are kept on your device as you work. Undo and redo everything, however many steps back.</p></div>
+    <div class="card"><h3>Phone and tablet too</h3><p>Tap to select, drag to move, swipe through your show. Installs to the home screen from your browser.</p></div>
+    <div class="card"><h3>Private by design</h3><p>No account, no uploads, no tracking of your slides. Fonts and everything else ship inside the app.</p></div>
+  </section>
+
+  <div data-product="present">
+  <h2 id="downloads">Download</h2>
+  <p data-role="status" class="small">Free. No account. Pick your system:</p>
+  <div class="dl-grid">
+    <div class="dl-card" data-os="win"><h3>Windows</h3><p>Windows 10 or 11</p>
+      <a class="btn primary" data-file="KwiivaPresent-Windows-Setup.exe">Download for Windows</a>
+      <a class="alt" data-file="KwiivaPresent-Windows.msi">.msi installer (IT deployment)</a></div>
+    <div class="dl-card" data-os="mac"><h3>macOS</h3><p>macOS 11 or newer</p>
+      <a class="btn primary" data-file="KwiivaPresent-macOS-AppleSilicon.dmg">Apple silicon (M1 and newer)</a>
+      <a class="btn" data-file="KwiivaPresent-macOS-Intel.dmg">Intel Mac</a></div>
+    <div class="dl-card" data-os="linux"><h3>Linux</h3><p>Any recent distribution</p>
+      <a class="btn primary" data-file="KwiivaPresent-Linux.AppImage">Download .AppImage</a>
+      <a class="alt" data-file="KwiivaPresent-Linux.deb">.deb for Debian / Ubuntu</a></div>
+  </div>
+  </div>
+  <p class="small">Don't want to install anything? <a href="/present/app/">Use Kwiiva Present in your browser</a>. Need an older version or the source? <a href="REPO_URL/releases">See all releases</a>.</p>
+
+  <h2>Installing an unsigned app</h2>
+  <p>Kwiiva Present is a free project and the installers are not yet signed with paid developer certificates, so your OS will warn you the first time:</p>
+  <table>
+    <tr><th>macOS</th><td>Drag Kwiiva Present to Applications, then <strong>right-click → Open → Open</strong> (once). If macOS says the app is "damaged", run <code>xattr -cr "/Applications/Kwiiva Present.app"</code> in Terminal.</td></tr>
+    <tr><th>Windows</th><td>If SmartScreen appears, choose <strong>More info → Run anyway</strong>.</td></tr>
+    <tr><th>Linux</th><td>Make the AppImage executable (<code>chmod +x</code>) and run it, or install the <code>.deb</code>.</td></tr>
+  </table>
+  <p>Prefer to verify? The <a href="REPO_URL">source is public</a> and the installers are built by public GitHub Actions runs.</p>
+
+  </main>
+<footer><a href="/">Kwiiva</a> · Kwiiva Present is MIT licensed · <a data-repo-link href="#">Source on GitHub</a></footer>
+
+<script src="/site.js"></script>
+</body>
+</html>

@@ -32,11 +32,13 @@ test('Kwiiva home page lists every app, each with a one-click download', async (
   await expect(page.getByRole('heading', { name: 'Kwiiva Write' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Kwiiva Paper' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Kwiiva Grid' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Kwiiva Present' })).toBeVisible()
   const mains = page.locator('[data-role="main"]')
-  await expect(mains).toHaveCount(3)
+  await expect(mains).toHaveCount(4)
   await expect(mains.nth(0)).toHaveAttribute('href', '/api/download/paper/KwiivaPaper-Linux.AppImage')
   await expect(mains.nth(1)).toHaveAttribute('href', '/api/download/write/KwiivaWrite-Linux.AppImage')
   await expect(mains.nth(2)).toHaveAttribute('href', '/api/download/grid/KwiivaGrid-Linux.AppImage')
+  await expect(mains.nth(3)).toHaveAttribute('href', '/api/download/present/KwiivaPresent-Linux.AppImage')
   await expect(page.getByRole('link', { name: 'Learn more about Kwiiva Write' })).toHaveAttribute('href', '/write/')
 })
 
@@ -46,6 +48,14 @@ test('Kwiiva Write page: one click downloads the installer for the visitor\'s sy
   await expect(main(page)).toHaveAttribute('href', '/api/download/write/KwiivaWrite-Windows-Setup.exe')
   await expect(page.locator('[data-os="mac"] a[data-file="KwiivaWrite-macOS-Intel.dmg"]')).toHaveAttribute('href', '/api/download/write/KwiivaWrite-macOS-Intel.dmg')
   await expect(page.getByRole('link', { name: 'Open in browser' }).first()).toHaveAttribute('href', '/write/app/')
+})
+
+test('Kwiiva Present page: one click downloads the installer for the visitor\'s system', async ({ page }) => {
+  await visit(page, { platform: 'MacIntel', release: true, path: '/present/' })
+  await expect(main(page)).toHaveText('Download for macOS')
+  await expect(main(page)).toHaveAttribute('href', '/api/download/present/KwiivaPresent-macOS-AppleSilicon.dmg')
+  await expect(page.locator('[data-os="win"] a[data-file="KwiivaPresent-Windows.msi"]')).toHaveAttribute('href', '/api/download/present/KwiivaPresent-Windows.msi')
+  await expect(page.getByRole('link', { name: 'Open in browser' }).first()).toHaveAttribute('href', '/present/app/')
 })
 
 test('Kwiiva Grid page: one click downloads the installer for the visitor\'s system', async ({ page }) => {
@@ -129,7 +139,7 @@ test('phone visitors are pointed to the browser version', async ({ page }) => {
 })
 
 test('the website does not compare itself to other products', async ({ page }) => {
-  for (const path of ['/', '/paper/', '/write/', '/grid/']) {
+  for (const path of ['/', '/paper/', '/write/', '/grid/', '/present/']) {
     await visit(page, { platform: 'Win32', release: true, path })
     await expect(page.locator('body')).not.toContainText(/acrobat|microsoft|google|\bwords?\b(?! count)/i)
   }

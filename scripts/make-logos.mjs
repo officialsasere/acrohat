@@ -17,6 +17,8 @@ const GLYPHS = {
   G: { w: 100, d: 'M100 -118A66 66 0 1 0 100 -30V-70H62' },
   d: { w: 75, d: 'M37 -88A38 38 0 1 0 37 -12A38 38 0 1 0 37 -88ZM75 -150V0' },
   r: { w: 50, d: 'M0 -100V0M0 -56C0 -86 18 -100 50 -100' },
+  n: { w: 76, d: 'M0 -100V0M0 -62C0 -90 20 -100 40 -100C64 -100 76 -84 76 -60V0' },
+  s: { w: 66, d: 'M62 -84C50 -100 16 -104 8 -80C2 -60 64 -52 60 -24C56 4 12 4 2 -16' },
 }
 const GAP = 38
 
@@ -103,6 +105,21 @@ const gridMark = `<defs>
   <g fill="#a8553a"><rect x="676" y="620" width="46" height="192" rx="8"/><rect x="748" y="570" width="46" height="242" rx="8"/></g>
   <g stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".95"><path d="M246 262h110M246 262l50 0"/></g>`
 
+const presentMark = `<defs>
+    <linearGradient id="rbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d7e2a8"/><stop offset=".55" stop-color="#9bb162"/><stop offset="1" stop-color="#5d7437"/></linearGradient>
+    <linearGradient id="rpage" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffefb"/><stop offset="1" stop-color="#f6ecdc"/></linearGradient>
+    <linearGradient id="rink" gradientUnits="userSpaceOnUse" x1="260" y1="300" x2="720" y2="640"><stop offset="0" stop-color="#7f9a47"/><stop offset="1" stop-color="#46592a"/></linearGradient>
+    <filter id="rsh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="22" stdDeviation="26" flood-color="#2f3d1a" flood-opacity=".32"/></filter>
+  </defs>
+  <rect width="1024" height="1024" rx="232" fill="url(#rbg)"/>${HIGHLIGHT}
+  <rect x="292" y="196" width="560" height="352" rx="44" fill="#fffefb" opacity=".5"/>
+  <g filter="url(#rsh)"><rect x="170" y="290" width="640" height="400" rx="48" fill="url(#rpage)"/></g>
+  <rect x="226" y="350" width="330" height="52" rx="26" fill="url(#rink)"/>
+  <g stroke="#e3dcc4" stroke-width="28" stroke-linecap="round"><path d="M240 466h380M240 530h260"/></g>
+  <g fill="#9bb162"><rect x="590" y="520" width="38" height="96" rx="8"/><rect x="644" y="470" width="38" height="146" rx="8"/><rect x="698" y="420" width="38" height="196" rx="8" opacity=".0"/></g>
+  <g filter="url(#rsh)"><circle cx="770" cy="700" r="132" fill="url(#rink)"/></g>
+  <path d="M736 636v128l108-64z" fill="#fffefb"/>`
+
 const svg = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">\n  ${body}\n</svg>\n`
 const nested = (inner, x, y, size) => `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 1024 1024">${inner}</svg>`
 
@@ -128,8 +145,10 @@ out('favicon.svg', svg(1024, 1024, kwiivaMark()))
 out('paper.svg', svg(1024, 1024, paperMark))
 out('write.svg', svg(1024, 1024, writeMark))
 out('grid.svg', svg(1024, 1024, gridMark))
+out('present.svg', svg(1024, 1024, presentMark))
 out('write-lockup.svg', lockup(writeMark.replace(/id="w(bg|page|ink|pen|sh)"/g, 'id="x$1"').replace(/url\(#w(bg|page|ink|pen|sh)\)/g, 'url(#x$1)'), { ink: '#2b1d14', name: 'Kwiiva', sub: 'Write' }))
 out('grid-lockup.svg', lockup(gridMark.replace(/id="g(bg|page|ink|sh)"/g, 'id="y$1"').replace(/url\(#g(bg|page|ink|sh)\)/g, 'url(#y$1)'), { ink: '#2b1d14', name: 'Kwiiva', sub: 'Grid' }))
+out('present-lockup.svg', lockup(presentMark.replace(/id="r(bg|page|ink|sh)"/g, 'id="z$1"').replace(/url\(#r(bg|page|ink|sh)\)/g, 'url(#z$1)'), { ink: '#2b1d14', name: 'Kwiiva', sub: 'Present' }))
 out('kwiiva-lockup.svg', lockup(kwiivaMark('lk'), { ink: '#2b1d14', name: 'Kwiiva' }))
 out('paper-lockup.svg', lockup(paperMark.replace(/id="p(bg|page|ink|sh)"/g, 'id="q$1"').replace(/url\(#p(bg|page|ink|sh)\)/g, 'url(#q$1)'), { ink: '#2b1d14', name: 'Kwiiva', sub: 'Paper' }))
 // The wordmark alone, for inlining in pages (uses currentColor so it follows light/dark mode).

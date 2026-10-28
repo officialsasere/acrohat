@@ -14,6 +14,8 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn typecheck
       - run: npx oxlint
+      - name: An independent .pptx reader for the tests
+        run: python3 -m pip install --target /tmp/pplib python-pptx
       - run: yarn test
       - run: npx playwright install --with-deps chromium
       - run: yarn test:e2e
@@ -26,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, macos-latest, windows-latest]
-        app: [src-tauri, src-tauri-write, src-tauri-grid]
+        app: [src-tauri, src-tauri-write, src-tauri-grid, src-tauri-present]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

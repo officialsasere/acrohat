@@ -20,6 +20,12 @@
       web: '/grid/app/',
       main: { win: 'KwiivaGrid-Windows-Setup.exe', linux: 'KwiivaGrid-Linux.AppImage', macArm: 'KwiivaGrid-macOS-AppleSilicon.dmg', macIntel: 'KwiivaGrid-macOS-Intel.dmg' },
     },
+    present: {
+      name: 'Kwiiva Present',
+      tag: 'present-latest',
+      web: '/present/app/',
+      main: { win: 'KwiivaPresent-Windows-Setup.exe', linux: 'KwiivaPresent-Linux.AppImage', macArm: 'KwiivaPresent-macOS-AppleSilicon.dmg', macIntel: 'KwiivaPresent-macOS-Intel.dmg' },
+    },
     write: {
       name: 'Kwiiva Write',
       tag: 'write-latest',

@@ -1,7 +1,18 @@
 # Packaging & distribution (all free)
 
 ## GitHub Releases (one workflow per app)
-Run **Actions → Release → Run workflow**, or tag a version (`git tag paper-v0.1.0 && git push --tags`). `.github/workflows/release.yml` builds Kwiiva Paper for every system and publishes two releases: `paper-v0.1.0` (kept) and `paper-latest` (files replaced each time; the website links to it). Another app gets its own `<app>-v*` tags and `<app>-latest` release.
+Each app has its own workflow and its own tags, so releasing one never touches the others:
+
+| App | Workflow (Actions tab) | Tag to push | Rolling release the website links to |
+|---|---|---|---|
+| Kwiiva Paper | **Release Kwiiva Paper** | `paper-v0.1.0` | `paper-latest` |
+| Kwiiva Write | **Release Kwiiva Write** | `write-v0.1.0` | `write-latest` |
+| Kwiiva Grid | **Release Kwiiva Grid** | `grid-v0.1.0` | `grid-latest` |
+| Kwiiva Present | **Release Kwiiva Present** | `present-v0.1.0` | `present-latest` |
+
+Run the workflow from the Actions tab ("Run workflow"), or tag a version (`git tag present-v0.1.0 && git push --tags`). All four call the shared `desktop-release.yml`, which builds Windows, macOS (Apple silicon and Intel) and Linux installers and publishes two releases: `<app>-v<version>` (kept) and `<app>-latest` (replaced each time, with fixed file names such as `KwiivaPresent-Windows-Setup.exe`).
+
+Run an app's workflow only when that app has changed. Adding a new app needs its own workflow once; the others do not need to be run again. In Settings → Actions → General, set workflow permissions to **Read and write**.
 
 ## Netlify (website + web app)
 Import the repository in Netlify. `netlify.toml` configures everything, including the counter function in `netlify/functions` (free tier; it uses Netlify Blobs). If your site is not `https://kwiiva.netlify.app`, change `STATS_ORIGIN` in `shared/usage.ts` (the desktop apps use it) and the host in the apps' `connect-src` content security policy in the two `tauri.conf.json` files. The Kwiiva home page is `/`, the Kwiiva Paper page is `/paper/` and the editor is `/paper/app/`. Add a custom domain under Domain management if you want one (a free `*.netlify.app` name works out of the box).

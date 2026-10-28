@@ -10,6 +10,7 @@ import { textOf, plainText } from './model'
 import { startEdit } from './editor/textEdit'
 
 const S = () => useStore.getState()
+let pasteSeen = false
 const typing = (t: EventTarget | null) => { const el = t as HTMLElement | null; return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable || !!el.closest?.('.pm')) }
 
 /** Shortcuts, copy and paste, and files dropped on the window. */
@@ -33,6 +34,9 @@ export function useGlobalInput() {
       if (k === 'z' && !(e.target as HTMLElement).closest?.('.pm')) { e.preventDefault(); if (e.shiftKey) s.redo(); else s.undo(); return }
       if (k === 'y' && !(e.target as HTMLElement).closest?.('.pm')) { e.preventDefault(); s.redo(); return }
       if (typing(e.target)) return
+      // Some browsers send no copy or paste event when the system clipboard is empty, so objects are also handled from the keys.
+      if (k === 'c' && s.sel.length && !document.activeElement?.closest('.slide-panel')) copySel()
+      else if (k === 'v' && s.clip?.length && !document.activeElement?.closest('.slide-panel')) { pasteSeen = false; setTimeout(() => { if (!pasteSeen) pasteEls() }, 120) }
       if (k === 'a') { e.preventDefault(); selectAll() }
       else if (k === 'd') { e.preventDefault(); duplicateSel() }
       else if (k === 'g') { e.preventDefault(); if (e.shiftKey) ungroup(); else group() }
@@ -53,6 +57,7 @@ export function useGlobalInput() {
     const onCopy = (e: ClipboardEvent) => copy(e, false)
     const onCut = (e: ClipboardEvent) => copy(e, true)
     const onPaste = (e: ClipboardEvent) => {
+      pasteSeen = true
       const s = S()
       if (s.presenting || typing(e.target) || s.screen !== 'edit' || document.activeElement?.closest('.slide-panel')) return
       const files = [...(e.clipboardData?.files ?? [])].filter((f) => f.type.startsWith('image/'))

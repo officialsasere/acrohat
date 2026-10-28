@@ -225,7 +225,7 @@ test('copy and paste an object', async ({ page }) => {
   await page.mouse.move(a.x, a.y); await page.mouse.down(); await page.mouse.move(b.x, b.y, { steps: 3 }); await page.mouse.up()
   await page.locator('[data-testid="stage"]').focus()
   await page.keyboard.press('ControlOrMeta+c'); await page.keyboard.press('ControlOrMeta+v')
-  expect((await slide(page)).els.filter((e) => e.geom?.startsWith('star'))).toHaveLength(2)
+  await expect.poll(async () => (await slide(page)).els.filter((e) => e.geom?.startsWith('star')).length).toBe(2)
 })
 
 test('speaker notes are kept per slide', async ({ page }) => {

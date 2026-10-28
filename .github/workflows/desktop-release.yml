@@ -3,7 +3,7 @@ name: Desktop release (reusable)
 # website can link straight to them. Two releases are written:
 #   <app>-v<version>   the versioned release (kept forever)
 #   <app>-latest       a rolling release whose files are replaced each time; the website's Download buttons use it
-# Called by release-paper.yml and release-write.yml. A new app only needs its own tiny caller file.
+# Called by one small file per app (release-paper.yml, release-write.yml, release-grid.yml, release-present.yml). A new app only needs its own tiny caller file.
 on:
   workflow_call:
     inputs:

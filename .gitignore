@@ -35,3 +35,5 @@ src-tauri-write/gen
 package-lock.json
 src-tauri-grid/target
 src-tauri-grid/gen
+src-tauri-present/target
+src-tauri-present/gen

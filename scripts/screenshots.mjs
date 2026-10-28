@@ -102,11 +102,24 @@ try {
   })
   await wait(900); await shot(page, 'grid')
 
+  // ---- Kwiiva Present
+  page = await ctx.newPage(); await page.addInitScript(noPickers)
+  await page.goto(base + '/present/app/')
+  await page.getByRole('button', { name: /Quarterly review/ }).click()
+  await page.locator('[data-slide]').nth(2).click()
+  await wait(500)
+  const chartHit = page.locator('.overlay [data-hit]').nth(1)
+  await chartHit.click()
+  await page.getByRole('button', { name: 'Format pane' }).first().click()
+  await wait(900); await shot(page, 'present')
+
   // ---- on a phone
   page = await pctx.newPage(); await page.addInitScript(noPickers)
   await page.goto(base + '/write/app/'); await page.getByRole('button', { name: /Resume/ }).click(); await wait(900); await shot(page, 'write-mobile')
   page = await pctx.newPage(); await page.addInitScript(noPickers)
   await page.goto(base + '/grid/app/'); await page.getByRole('button', { name: /Monthly budget/ }).click(); await wait(900); await shot(page, 'grid-mobile')
+  page = await pctx.newPage(); await page.addInitScript(noPickers)
+  await page.goto(base + '/present/app/'); await page.getByRole('button', { name: /Pitch deck/ }).click(); await page.locator('.slide-thumb').nth(1).tap(); await wait(900); await shot(page, 'present-mobile')
   page = await pctx.newPage(); await page.addInitScript(noPickers)
   await page.goto(base + '/paper/app/')
   const ch = page.waitForEvent('filechooser'); await page.getByRole('button', { name: 'Open a PDF' }).click(); await (await ch).setFiles('tests/fixtures/sample.pdf')

@@ -1,0 +1,16 @@
+{
+  "name": "Kwiiva Present",
+  "short_name": "Present",
+  "description": "Presentations, free. Free and open source. Your files never leave your device.",
+  "start_url": "/present/app/",
+  "scope": "/present/",
+  "display": "standalone",
+  "background_color": "#fbf6ee",
+  "theme_color": "#8a5a36",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "/present-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/present-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/present-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

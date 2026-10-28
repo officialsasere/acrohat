@@ -1,5 +1,11 @@
 # Changelog
 
+## Kwiiva Present 0.1.0 – first release
+- A presentation app: ten themes with eight layouts, an editable slide master, text with bullets and numbering, nearly 90 shapes, lines and connectors, pictures, tables, charts, audio and video.
+- Animations (entrance, emphasis, exit) and slide transitions; a full-screen show with pen, highlighter and laser pointer, a presenter view with notes and a timer, and an audience window.
+- Opens and saves .pptx (written and read without a library); exports PDF, PNG pictures, a one-file web page and an outline; makes slides from a Markdown outline.
+- Works on phones and tablets and installs to the home screen. Desktop apps for Windows, macOS and Linux.
+
 ## Kwiiva Grid 0.1.0 – first release
 - A spreadsheet with 409 functions, dynamic arrays, LET/LAMBDA, named ranges and number formats.
 - Formatting, merged cells, freeze panes, conditional formatting (including colour scales and data bars), data validation with drop-downs and check boxes, sorting, filters, pivot tables, charts, find and replace.

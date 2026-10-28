@@ -1,0 +1,60 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Kwiiva Present",
+  "version": "0.1.0",
+  "identifier": "io.github.officialsasere.kwiiva-present",
+  "build": {
+    "frontendDist": "../dist-present",
+    "devUrl": "http://localhost:5173/present/app/",
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build:present"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Kwiiva Present",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 800,
+        "minHeight": 520,
+        "resizable": true,
+        "fullscreen": false,
+        "dragDropEnabled": false,
+        "url": "present/app/index.html"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost data: blob: https://kwiiva.netlify.app"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Presentations",
+    "longDescription": "Free, open-source presentation maker with themes, charts, tables, animations and a presenter view. Everything stays on your computer.",
+    "copyright": "MIT License",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "pptx"
+        ],
+        "name": "Presentation",
+        "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "role": "Editor"
+      }
+    ],
+    "macOS": {
+      "minimumSystemVersion": "11.0",
+      "signingIdentity": "-"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+name: Release Kwiiva Present
+# Run it from the Actions tab ("Release Kwiiva Present" → "Run workflow"), or push a tag such as present-v0.1.0.
+# The installer file names (KwiivaPresent-Windows-Setup.exe and so on) are what the website's Download buttons point at.
+on:
+  push:
+    tags: ['present-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/desktop-release.yml
+    with: { app: present, title: Kwiiva Present, dir: src-tauri-present, prefix: KwiivaPresent }
+    permissions:
+      contents: write

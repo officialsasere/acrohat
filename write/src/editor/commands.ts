@@ -1,5 +1,5 @@
 import type { Editor } from '@tiptap/core'
-import { DEFAULT_SIZE } from './fonts'
+import { DEFAULT_SIZE } from '../../../shared/fonts'
 
 export const STYLES = [
   { id: 'normal', label: 'Normal text' },

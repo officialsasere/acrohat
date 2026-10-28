@@ -31,10 +31,12 @@ test('Kwiiva home page lists every app, each with a one-click download', async (
   await visit(page, { platform: 'Linux x86_64', release: true, path: '/' })
   await expect(page.getByRole('heading', { name: 'Kwiiva Write' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Kwiiva Paper' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Kwiiva Grid' })).toBeVisible()
   const mains = page.locator('[data-role="main"]')
-  await expect(mains).toHaveCount(2)
+  await expect(mains).toHaveCount(3)
   await expect(mains.nth(0)).toHaveAttribute('href', '/api/download/paper/KwiivaPaper-Linux.AppImage')
   await expect(mains.nth(1)).toHaveAttribute('href', '/api/download/write/KwiivaWrite-Linux.AppImage')
+  await expect(mains.nth(2)).toHaveAttribute('href', '/api/download/grid/KwiivaGrid-Linux.AppImage')
   await expect(page.getByRole('link', { name: 'Learn more about Kwiiva Write' })).toHaveAttribute('href', '/write/')
 })
 
@@ -44,6 +46,14 @@ test('Kwiiva Write page: one click downloads the installer for the visitor\'s sy
   await expect(main(page)).toHaveAttribute('href', '/api/download/write/KwiivaWrite-Windows-Setup.exe')
   await expect(page.locator('[data-os="mac"] a[data-file="KwiivaWrite-macOS-Intel.dmg"]')).toHaveAttribute('href', '/api/download/write/KwiivaWrite-macOS-Intel.dmg')
   await expect(page.getByRole('link', { name: 'Open in browser' }).first()).toHaveAttribute('href', '/write/app/')
+})
+
+test('Kwiiva Grid page: one click downloads the installer for the visitor\'s system', async ({ page }) => {
+  await visit(page, { platform: 'MacIntel', release: true, path: '/grid/' })
+  await expect(main(page)).toHaveText('Download for macOS')
+  await expect(main(page)).toHaveAttribute('href', '/api/download/grid/KwiivaGrid-macOS-AppleSilicon.dmg')
+  await expect(page.locator('[data-os="linux"] a[data-file="KwiivaGrid-Linux.deb"]')).toHaveAttribute('href', '/api/download/grid/KwiivaGrid-Linux.deb')
+  await expect(page.getByRole('link', { name: 'Open in browser' }).first()).toHaveAttribute('href', '/grid/app/')
 })
 
 test('the site shows how many downloads and launches there have been', async ({ page }) => {
@@ -119,7 +129,7 @@ test('phone visitors are pointed to the browser version', async ({ page }) => {
 })
 
 test('the website does not compare itself to other products', async ({ page }) => {
-  for (const path of ['/', '/paper/', '/write/']) {
+  for (const path of ['/', '/paper/', '/write/', '/grid/']) {
     await visit(page, { platform: 'Win32', release: true, path })
     await expect(page.locator('body')).not.toContainText(/acrobat|microsoft|google|\bwords?\b(?! count)/i)
   }

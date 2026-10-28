@@ -11,9 +11,10 @@ const here = (p: string) => resolve(import.meta.dirname, p)
 const PAGES = {
   paper: { paper: here('paper/index.html'), paperApp: here('paper/app/index.html') },
   write: { write: here('write/index.html'), writeApp: here('write/app/index.html') },
+  grid: { grid: here('grid/index.html'), gridApp: here('grid/app/index.html') },
 }
 const app = process.env.KWIIVA_APP as keyof typeof PAGES | undefined
-const input = app ? PAGES[app] : { site: here('index.html'), ...PAGES.paper, ...PAGES.write }
+const input = app ? PAGES[app] : { site: here('index.html'), ...PAGES.paper, ...PAGES.write, ...PAGES.grid }
 
 export default defineConfig({
   base: process.env.BASE ?? '/',

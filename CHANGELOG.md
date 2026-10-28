@@ -1,5 +1,11 @@
 # Changelog
 
+## Kwiiva Grid 0.1.0 – first release
+- A spreadsheet with 409 functions, dynamic arrays, LET/LAMBDA, named ranges and number formats.
+- Formatting, merged cells, freeze panes, conditional formatting (including colour scales and data bars), data validation with drop-downs and check boxes, sorting, filters, pivot tables, charts, find and replace.
+- Opens and saves .xlsx and .csv; charts and notes also come back when a file is reopened here.
+- Works on phones and tablets and installs to the home screen. Desktop apps for Windows, macOS and Linux.
+
 ## Kwiiva Write 0.1.0 – first release
 - A document editor with real pages (Letter, A4, A5, Legal, A3), margins, headers, footers and page numbers; fonts, styles, lists, checklists, tables, pictures, links, table of contents, find and replace, outline, templates.
 - Opens and saves .docx (own reader and writer), plus HTML, Markdown and plain text; print or save as PDF.

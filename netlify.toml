@@ -1,4 +1,4 @@
-# Netlify hosts the Kwiiva website (/), each app's page (/paper/, /write/) and its web app (/paper/app/, /write/app/).
+# Netlify hosts the Kwiiva website (/), each app's page (/paper/, /write/, /grid/) and its web app (/paper/app/, /write/app/, /grid/app/).
 # Installers are served by GitHub Releases. The small function in netlify/functions counts downloads and launches.
 [build]
   command = "yarn build"
@@ -14,6 +14,10 @@
 [[redirects]]
   from = "/write/app"
   to = "/write/app/"
+  status = 301
+[[redirects]]
+  from = "/grid/app"
+  to = "/grid/app/"
   status = 301
 
 # Short links: `/paper/app` opens the editor; the old `/app/` address (before the rename) goes there too.

@@ -8,8 +8,25 @@ Free, open-source apps that run on your own computer. No accounts, no uploads, n
 |---|---|---|
 | <img src="public/paper.svg" width="28" alt="" /> **Kwiiva Paper** | Edit, convert and sign PDFs | [details below](#kwiiva-paper) · web version at `/paper/app/` |
 | <img src="public/write.svg" width="28" alt="" /> **Kwiiva Write** | Write documents, open and save DOCX | [details below](#kwiiva-write) · web version at `/write/app/` |
+| <img src="public/grid.svg" width="28" alt="" /> **Kwiiva Grid** | Spreadsheets: formulas, charts, pivot tables, XLSX | [details below](#kwiiva-grid) · web version at `/grid/app/` |
 
 More apps will be added here.
+
+<p align="center">
+  <a href="https://kwiiva.netlify.app"><img src="docs/screenshots/website.png" alt="The Kwiiva website" width="760" /></a>
+</p>
+
+<p align="center"><b>If Kwiiva is useful to you, please <a href="https://github.com/officialsasere/kwiiva">⭐ star the project</a>.</b> It is how other people find it.</p>
+
+## See it
+
+| | |
+|---|---|
+| **Kwiiva Paper**: edit text in a PDF, convert and sign<br><a href="docs/screenshots/paper.png"><img src="docs/screenshots/paper.png" alt="Kwiiva Paper editing a PDF" width="420" /></a> | **Kwiiva Write**: documents with real pages, tables and DOCX<br><a href="docs/screenshots/write.png"><img src="docs/screenshots/write.png" alt="Kwiiva Write with a report open" width="420" /></a> |
+| **Kwiiva Grid**: spreadsheets with 400+ functions, charts and pivot tables<br><a href="docs/screenshots/grid.png"><img src="docs/screenshots/grid.png" alt="Kwiiva Grid with a budget and a chart" width="420" /></a> | **On a phone**: all three work in a mobile browser<br><img src="docs/screenshots/paper-mobile.png" alt="Kwiiva Paper on a phone" width="120" /> <img src="docs/screenshots/write-mobile.png" alt="Kwiiva Write on a phone" width="120" /> <img src="docs/screenshots/grid-mobile.png" alt="Kwiiva Grid on a phone" width="120" /> |
+
+_The pictures are made by `yarn screenshots`, so they always show the real apps._
+
 
 ---
 
@@ -107,9 +124,45 @@ Because signing certificates cost money, your OS will warn you the first time:
 
 The same first-run warnings as Kwiiva Paper apply (the installers are not code-signed). Or use it in the browser at `/write/app/`.
 
+## Kwiiva Grid
+
+<p align="center"><img src="public/grid-lockup.svg" width="300" alt="Kwiiva Grid" /></p>
+
+**Spreadsheets, free and open source,** on Windows, macOS, Linux, in the browser and on your phone. No account, nothing uploaded; your work is kept on your device as you go.
+
+| | |
+|---|---|
+| **Formulas** | **409 functions** (maths, statistics and distributions, text, dates, lookup, finance, engineering, information, logic), operators and references like `$A$1`, `A:A`, `Sheet2!B3:C9` and `A1#`. **Dynamic arrays** that spill (`FILTER`, `SORT`, `SORTBY`, `UNIQUE`, `SEQUENCE`, `TRANSPOSE`, `VSTACK`, `TEXTSPLIT`…), `LET`, `LAMBDA`, `MAP`, `REDUCE`, `SCAN`, named ranges |
+| **Cells** | Typing recognises numbers, percentages, currency, dates and times. Number formats (`#,##0.00`, `0%`, `yyyy-mm-dd`, `[h]:mm`, fractions, scientific, your own codes), fonts, colours, borders, merged cells, wrapping, rotation, indent, hyperlinks, notes |
+| **Sheet** | Several sheets, freeze panes, hide and resize rows and columns, fit to data, insert and delete rows and columns (formulas follow), gridlines on/off, tab colours, protect a sheet |
+| **Work fast** | Autofill series (numbers, dates, months, `Item 1, Item 2…`, formulas), copy and paste with formulas and formats, paste special, format painter, find and replace (with formulas and regular expressions), go to, undo and redo without limit |
+| **Data** | Sort by several columns, filters with search and conditions, remove duplicates, trim spaces, split text to columns, data validation (lists, numbers, dates, custom, **check boxes**), pivot tables |
+| **See it** | Conditional formatting (value, text, duplicates, top/bottom, dates, formulas, **colour scales**, **data bars**), charts (column, bar, line, area, pie, doughnut, scatter, stacked, 100%), pictures, `SPARKLINE` |
+| **Files** | Open and save **.xlsx** (values, formulas, formats, merges, sizes, freeze panes, conditional formats, validation, links, names) plus **.csv** and **.tsv**; export HTML and JSON; print or save as PDF |
+| **Phones** | Tap to select, double-tap to edit, finger scrolling, full-screen menu, install from the browser with **Add to Home Screen** |
+
+### Honest limitations (Kwiiva Grid)
+- **Charts, pictures and notes do not appear in other programs.** They are stored inside the .xlsx so Kwiiva Grid restores them, but other spreadsheet programs ignore them. Everything else in the table above travels.
+- **No real-time collaboration, macros or external data connections** (no live stock prices, no importing from other files by formula).
+- **Pivot tables are snapshots.** Make a new one when the data changes.
+- **Not every function matches other programs to the last digit** (especially the statistical distributions, which are accurate to about 10 digits). Always check an important calculation.
+- **A million rows work, but very large files are slower** than in desktop-class programs. Tens of thousands of formulas recalculate in well under a second.
+- **Dates use the 1900 system** with its well-known leap-year quirk, so serial numbers match other programs.
+
+### Install (Kwiiva Grid)
+
+| System | Download |
+|---|---|
+| Windows | [KwiivaGrid-Windows-Setup.exe](https://github.com/officialsasere/kwiiva/releases/download/grid-latest/KwiivaGrid-Windows-Setup.exe) · [.msi](https://github.com/officialsasere/kwiiva/releases/download/grid-latest/KwiivaGrid-Windows.msi) |
+| macOS (Apple silicon) | [KwiivaGrid-macOS-AppleSilicon.dmg](https://github.com/officialsasere/kwiiva/releases/download/grid-latest/KwiivaGrid-macOS-AppleSilicon.dmg) |
+| macOS (Intel) | [KwiivaGrid-macOS-Intel.dmg](https://github.com/officialsasere/kwiiva/releases/download/grid-latest/KwiivaGrid-macOS-Intel.dmg) |
+| Linux | [KwiivaGrid-Linux.AppImage](https://github.com/officialsasere/kwiiva/releases/download/grid-latest/KwiivaGrid-Linux.AppImage) · [.deb](https://github.com/officialsasere/kwiiva/releases/download/grid-latest/KwiivaGrid-Linux.deb) |
+
+The same first-run warnings as the other apps apply (the installers are not code-signed). Or use it in the browser at `/grid/app/`.
+
 ## Privacy
 
-Your documents and PDFs never leave your device, and nothing in them is read by anyone but you. There are no accounts and no tracking of what you do inside the apps.
+Your documents, spreadsheets and PDFs never leave your device, and nothing in them is read by anyone but you. There are no accounts and no tracking of what you do inside the apps.
 
 The website shows how much Kwiiva is used. To make that possible:
 - **Downloads** from the website go through a tiny counter (`netlify/functions/stats.mts`) that adds one to a total and sends you on to GitHub.

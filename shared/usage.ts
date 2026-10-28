@@ -5,7 +5,7 @@
  * Nothing else: no ID, no file names, no text. The server counts and does not keep addresses.
  * Anyone can switch it off (Help → Privacy), and the app works the same either way.
  */
-export type Product = 'paper' | 'write'
+export type Product = 'paper' | 'write' | 'grid'
 
 /** Where the counters live. The web apps use their own site; the desktop apps need the full address. */
 export const STATS_ORIGIN = 'https://kwiiva.netlify.app'

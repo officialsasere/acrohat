@@ -14,6 +14,12 @@
       web: '/paper/app/',
       main: { win: 'KwiivaPaper-Windows-Setup.exe', linux: 'KwiivaPaper-Linux.AppImage', macArm: 'KwiivaPaper-macOS-AppleSilicon.dmg', macIntel: 'KwiivaPaper-macOS-Intel.dmg' },
     },
+    grid: {
+      name: 'Kwiiva Grid',
+      tag: 'grid-latest',
+      web: '/grid/app/',
+      main: { win: 'KwiivaGrid-Windows-Setup.exe', linux: 'KwiivaGrid-Linux.AppImage', macArm: 'KwiivaGrid-macOS-AppleSilicon.dmg', macIntel: 'KwiivaGrid-macOS-Intel.dmg' },
+    },
     write: {
       name: 'Kwiiva Write',
       tag: 'write-latest',

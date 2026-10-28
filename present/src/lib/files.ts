@@ -1,3 +1,4 @@
+import { errText, nativeRead, nativeWrite } from '../../../shared/native'
 import { isTauri } from '../../../src/lib/platform'
 import { useStore, type FileKind } from '../store'
 import { buildTemplate } from '../templates'
@@ -50,9 +51,8 @@ export async function openFile() {
   const w = window as Picker
   if (isTauri) {
     const { open } = await import('@tauri-apps/plugin-dialog')
-    const { readFile } = await import('@tauri-apps/plugin-fs')
     const path = await open({ multiple: false, filters: [{ name: 'Presentations', extensions: OPEN_EXT }] })
-    if (typeof path === 'string') await openBytes(baseName(path), await readFile(path), undefined, path)
+    if (typeof path === 'string') await openBytes(baseName(path), await nativeRead(path), undefined, path)
     return
   }
   if (w.showOpenFilePicker) {
@@ -69,7 +69,13 @@ export async function openFile() {
   i.click()
 }
 
-function download(name: string, bytes: BlobPart, mime: string) {
+async function download(name: string, bytes: BlobPart, mime: string) {
+  if (isTauri) {
+    const { save: dlg } = await import('@tauri-apps/plugin-dialog')
+    const path = await dlg({ defaultPath: name })
+    if (path) { try { await nativeWrite(path, bytes instanceof Uint8Array ? bytes : new Uint8Array(await new Blob([bytes]).arrayBuffer())); useStore.getState().toast('success', `Saved ${baseName(path)}`) } catch (e) { useStore.getState().toast('error', `Could not save: ${errText(e)}`) } }
+    return
+  }
   const a = document.createElement('a')
   const url = URL.createObjectURL(new Blob([bytes], { type: mime }))
   a.href = url; a.download = name
@@ -120,10 +126,9 @@ export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
   try {
     if (isTauri) {
       const { save: dlg } = await import('@tauri-apps/plugin-dialog')
-      const { writeFile } = await import('@tauri-apps/plugin-fs')
       let path = persist ? s.file.path : undefined
       if (!path) { const p = await dlg({ defaultPath: `${name}.${k.ext}`, filters: [{ name: k.label, extensions: [k.ext] }] }); if (!p) return; path = p }
-      await writeFile(path, bytes)
+      await nativeWrite(path, bytes)
       if (kind === 'pptx') useStore.setState({ file: { ...s.file, path, name: stem(baseName(path)), kind, dirty: false } })
       s.toast('success', `Saved ${baseName(path)}`)
       return
@@ -138,7 +143,7 @@ export async function save(o: { saveAs?: boolean; kind?: FileKind } = {}) {
       s.toast('success', `Saved ${handle.name}`)
       return
     }
-  } catch (e) { if ((e as Error).name === 'AbortError') return; s.toast('error', `Could not save: ${(e as Error).message}`); return }
+  } catch (e) { if ((e as Error).name === 'AbortError') return; s.toast('error', `Could not save: ${errText(e)}`); return }
   download(`${name}.${k.ext}`, bytes as unknown as BlobPart, k.mime)
   if (kind === 'pptx') useStore.setState({ file: { ...s.file, kind, dirty: false } })
   s.toast('success', `Downloaded ${name}.${k.ext}`)

@@ -1,3 +1,4 @@
+import { errText, nativeRead, nativeWrite } from '../../../shared/native'
 import { isTauri } from '../../../src/lib/platform'
 import { readDocx } from '../formats/docxRead'
 import { writeDocx } from '../formats/docxWrite'
@@ -79,9 +80,8 @@ export async function openFile() {
   const w = window as Picker
   if (isTauri) {
     const { open } = await import('@tauri-apps/plugin-dialog')
-    const { readFile } = await import('@tauri-apps/plugin-fs')
     const path = await open({ multiple: false, filters: [{ name: 'Documents', extensions: OPENABLE }] })
-    if (typeof path === 'string') await openBytes(baseName(path), await readFile(path), undefined, path)
+    if (typeof path === 'string') await openBytes(baseName(path), await nativeRead(path), undefined, path)
     return
   }
   if (w.showOpenFilePicker) {
@@ -149,11 +149,10 @@ export async function save(opts: { saveAs?: boolean; kind?: FileKind } = {}) {
   try {
     if (isTauri) {
       const { save: dlg } = await import('@tauri-apps/plugin-dialog')
-      const { writeFile } = await import('@tauri-apps/plugin-fs')
       let path = !opts.saveAs && !opts.kind && s.doc.kind === kind ? s.doc.path : undefined
       path ??= (await dlg({ defaultPath: name, filters: [{ name: KINDS[kind].label, extensions: [KINDS[kind].ext] }] })) ?? undefined
       if (!path) return
-      await writeFile(path, bytes)
+      await nativeWrite(path, bytes)
       return done(baseName(path), { path })
     }
     let handle = !opts.saveAs && !opts.kind && s.doc.kind === kind ? s.doc.handle : undefined
@@ -167,7 +166,7 @@ export async function save(opts: { saveAs?: boolean; kind?: FileKind } = {}) {
     download(name, bytes, KINDS[kind].mime)
     done(name)
   } catch (e) {
-    if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${(e as Error).message}`)
+    if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${errText(e)}`)
   }
 }
 

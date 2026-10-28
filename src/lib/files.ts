@@ -1,5 +1,6 @@
 import { call } from '../engine/client'
 import { useStore } from '../store'
+import { errText, nativeRead, nativeWrite } from '../../shared/native'
 import { isTauri } from './platform'
 
 type PickerWindow = Window & {
@@ -15,12 +16,11 @@ function baseName(path: string) {
 
 async function openFilesTauri() {
   const { open } = await import('@tauri-apps/plugin-dialog')
-  const { readFile } = await import('@tauri-apps/plugin-fs')
   const { openBytes, toast } = useStore.getState()
   const picked = await open({ multiple: true, filters: [{ name: 'PDF documents', extensions: ['pdf'] }] })
   for (const path of picked ?? []) {
     try {
-      await openBytes(baseName(path), await readFile(path), undefined, path)
+      await openBytes(baseName(path), await nativeRead(path, 'read_pdf'), undefined, path)
     } catch (e) {
       toast('error', `Could not read ${baseName(path)}: ${e}`)
     }
@@ -85,10 +85,9 @@ export async function openFileList(files: FileList | File[] | null) {
 export async function download(name: string, bytes: Uint8Array) {
   if (isTauri) {
     const { save } = await import('@tauri-apps/plugin-dialog')
-    const { writeFile } = await import('@tauri-apps/plugin-fs')
     const ext = name.split('.').pop() ?? ''
     const path = await save({ defaultPath: name, filters: ext ? [{ name: ext.toUpperCase(), extensions: [ext] }] : undefined })
-    if (path) await writeFile(path, bytes)
+    if (path) await nativeWrite(path, bytes)
     return
   }
   const type = name.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream'
@@ -111,11 +110,10 @@ export async function saveActive(saveAs = false) {
   try {
     if (isTauri) {
       const { save } = await import('@tauri-apps/plugin-dialog')
-      const { writeFile } = await import('@tauri-apps/plugin-fs')
       let path = saveAs ? undefined : doc.path
       path ??= (await save({ defaultPath: doc.name, filters: [{ name: 'PDF documents', extensions: ['pdf'] }] })) ?? undefined
       if (!path) return
-      await writeFile(path, bytes)
+      await nativeWrite(path, bytes)
       s.markSaved(doc.id, baseName(path), undefined, path)
       s.toast('success', `Saved ${baseName(path)}`)
       return
@@ -134,7 +132,7 @@ export async function saveActive(saveAs = false) {
     s.markSaved(doc.id)
     s.toast('success', `Downloaded ${doc.name}`)
   } catch (e) {
-    if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${(e as Error).message}`)
+    if ((e as Error).name !== 'AbortError') s.toast('error', `Could not save: ${errText(e)}`)
   }
 }
 
